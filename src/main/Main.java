@@ -44,7 +44,7 @@ public class Main {
 
         GenerarEstadisticasResultados estadisticas = new GenerarEstadisticasResultados();
         GrabarFichero grabarFichero = new GrabarFichero();
-        grabarFichero.crearFichero(NOMBRE_FICHERO_SALIDA_FILTRADO, false);
+        grabarFichero.crearFichero("salida/" + NOMBRE_FICHERO_SALIDA_FILTRADO, true);
         int fase = 1;
         String carpeta = "resultado23febM/";
         int numColecciones = 18;
