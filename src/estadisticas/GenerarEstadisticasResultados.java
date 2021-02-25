@@ -207,9 +207,9 @@ public class GenerarEstadisticasResultados {
         if (responseCode.equals(504l)) {
             return "error 504;25935";
         }
-        if (respuesta.startsWith("{\"POSAZ526OperationResponse")) {
-            return "Copy modificada por mainframe";
-        }
+//        if (respuesta.startsWith("{\"POSAZ526OperationResponse")) {
+//            return "Copy modificada por mainframe";
+//        }
 
         if (respuesta.replaceAll(" ", "").equals(respuestaAlmacenada.replaceAll(" ", ""))) {
             return "TRIM EN VALOR;25497";
@@ -221,13 +221,17 @@ public class GenerarEstadisticasResultados {
             return "PGMIDERR;25561";
         }
         if (respuesta.contains("System.Int32")) {
+        	
             return "System.Int32;25489";
         }
         if (respuesta.contains("UNDEFINED_ELEMENT")) {
+        	if (respuesta.contains("UNDEFINED_ELEMENT System.Decimal")) {
+                return "System.Decimal;26372";
+            }
             return "UNDEFINED_ELEMENT;26151";
         }
         if (respuesta.contains("") || respuesta.contains("\\u0000")
-                || respuesta.contains("\\u0007") || respuesta.contains("\\u0017")) {
+                || respuesta.contains("\\u0007") || respuesta.contains("\\u0017") || respuestaAlmacenada.contains("")) {
             return "CARACTER-DESBORDAMIENTO;25493";
         }
         if (respuesta.contains("dfhcommarea")) {
@@ -240,9 +244,7 @@ public class GenerarEstadisticasResultados {
         if (respuesta.contains(" -99999")) {
             return "SQL ERROR -99999;25177";
         }
-        if (respuesta.startsWith("{\"POSAZ528OperationResponse")) {
-            System.out.println();
-        }
+        
         if (respuesta.contains(" -969")) {
             return "SQL ERROR -969;25897";
         }
@@ -265,7 +267,11 @@ public class GenerarEstadisticasResultados {
             return "ExecuteNonQuery;26240";
         }
         if (respuesta.contains("Range error")) {
-            return "ERange error;25493";
+            return "Range error;25493";
+        }
+        
+        if (respuesta.contains("QIX LINK")) {
+            return "QIX LINK;26373";
         }
 
         // Parche para validar la parte dinamica en respuesta del 631
@@ -292,8 +298,14 @@ public class GenerarEstadisticasResultados {
             return "Communication link failure;26030";
         }
 
+        if(respuesta.startsWith("{\"POSMZ140OperationResponse")) {
+        	return "Bloquea prueba por error QIX;26373";
+        }
+        
         System.out.println(respuesta);
         System.out.println(respuestaAlmacenada);
+
+
         System.out.println();
         return "Error sin detectar";
         // TODO PARCHE FECHA PROCESO PARA 631 fec_ult_proceso_s
