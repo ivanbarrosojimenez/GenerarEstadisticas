@@ -2,6 +2,7 @@
 package estadisticas;
 
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
@@ -86,34 +87,35 @@ public class GenerarEstadisticasResultados {
                 linea += ";" + resultadoGlobal + ";" + errorDetectado;
                 errorDetectado = "";
 
-                System.out.println(linea);
+                //System.out.println(linea);
                 sfRespuesta.append(linea);
                 sfRespuesta.append("\r\n");
             }
 
         }
         catch (Exception e) {
-            System.out.println(e);
+            System.err.println(e);
         }
         finally {
             return sfRespuesta;
         }
     }
 
-    public StringBuffer obtenerSalidaNewMan(String f1, boolean generaCabecera) {
+    public StringBuffer obtenerSalidaNewMan(String f1, boolean generaCabecera) throws IOException {
         StringBuffer sfRespuesta = new StringBuffer();
         JSONParser parser = new JSONParser();
-        try {
+        FileReader fr =  null;
+         try {
             // Pares de ficheros, poner de dos en dos
-            Object obj1 = parser.parse(new FileReader(f1));
-
+        	fr = new FileReader(f1);
+            Object obj1 = parser.parse(fr);
             JSONObject jsonObject1 = (JSONObject) obj1;
 
             JSONObject run = (JSONObject) jsonObject1.get("run");
             JSONArray executions = (JSONArray) run.get("executions");
             // JSONObject item = (JSONObject) executions.get(0);
             // JSONArray assertions = (JSONArray) item.get("assertions");
-            System.out.println("nº de assertions:" + executions.size());
+            //System.out.println("nº de assertions:" + executions.size());
             // Cabeceras
             String cabecera =
                     "Prueba;Transaccion;status code;mismo status code;es json;Respuesta==mainframe;mismo tipos error;Resultado global;clasificación error; Id Board";
@@ -130,7 +132,14 @@ public class GenerarEstadisticasResultados {
                 String transaccion = obtenerTransaccion(nombre);
 
                 JSONObject response = (JSONObject) execution.get("response");
-                Long responseCode = (Long) response.get("code");
+                Long responseCode = 999l;
+                try {
+                    responseCode = (Long) response.get("code");
+
+                }catch (Exception e) {
+					//e.printStackTrace();
+                	System.out.println();
+				}
 
                 JSONArray assertions = (JSONArray) execution.get("assertions");
                 // Array con los 4 test
@@ -172,6 +181,9 @@ public class GenerarEstadisticasResultados {
                                         errorDetectado = "";
                                         resultadoGlobal = true;
                                     }
+                                    if (errorDetectado.startsWith("Error sin detectar") && responseCode == 999) {
+                                        errorDetectado = "Error tratar respuesta (posible json incompleto)";
+                                    }
                                 }
                                 catch (Exception e) {
 
@@ -185,18 +197,22 @@ public class GenerarEstadisticasResultados {
                 linea += ";" + resultadoGlobal + ";" + errorDetectado;
                 errorDetectado = "";
 
-                System.out.println(linea);
+                //System.out.println(linea);
                 sfRespuesta.append(linea);
                 sfRespuesta.append("\r\n");
 
             }
         }
+        
         catch (
 
         Exception e) {
-            System.out.println(e);
+            System.out.println("Error obtenerSalida: "+e);
+            e.printStackTrace();
         }
         finally {
+        	fr.close();
+        	
             return sfRespuesta;
         }
     }
@@ -211,9 +227,7 @@ public class GenerarEstadisticasResultados {
 //            return "Copy modificada por mainframe";
 //        }
 
-        if (respuesta.replaceAll(" ", "").equals(respuestaAlmacenada.replaceAll(" ", ""))) {
-            return "TRIM EN VALOR;25497";
-        }
+        
         if (respuesta.contains("OUTPUT_OVERFLOW")) {
             return "OUTPUT_OVERFLOW;25933";
         }
@@ -241,6 +255,10 @@ public class GenerarEstadisticasResultados {
         if (respuesta.contains(" -104")) {
             return "SQL ERROR -104;25127";
         }
+        if (respuesta.contains("-30081")) {
+            return "SQL ERROR -30081;26558";
+        }
+        
         if (respuesta.contains(" -99999")) {
             return "SQL ERROR -99999;25177";
         }
@@ -248,9 +266,19 @@ public class GenerarEstadisticasResultados {
         if (respuesta.contains(" -969")) {
             return "SQL ERROR -969;25897";
         }
-
-        if (respuestaAlmacenada.contains("\\/")) {
-            return "error backslash;25490";
+        
+        if (respuestaAlmacenada.contains("\\//")) {
+        	//TODO TRATAMIENTO SACAR PATRON
+        	
+            return "error backslash doble;25490";
+        }
+        else if (respuesta.equals("undefined")) {
+        	//TODO TRATAMIENTO SACAR PATRON
+            return "error respuesta vacia;";
+        }
+        else if (respuestaAlmacenada.contains("\\/")) {
+        	//TODO TRATAMIENTO SACAR PATRON
+            return "error backslash simple;25490";
         }
         // Parche para error 593 (llega a en lugar de rgsao593)
         if (respuesta.replaceAll("\"a\"", "\"rgsao593e\"").equals(respuestaAlmacenada)) {
@@ -289,9 +317,9 @@ public class GenerarEstadisticasResultados {
                             respuesta.indexOf("fec_modificacion_s") + 39), "");
             // System.out.println(respuestaSinFechas);
             // System.out.println(respuestaAlmacenadaSinFechas);
-            // System.out.println(respuestaSinFechas.equals(respuestaAlmacenadaSinFechas));
+             System.out.println(respuestaSinFechas.equals(respuestaAlmacenadaSinFechas));
             //
-            return "Sin error, diferencia en salida fechas";
+            return respuestaSinFechas.equals(respuestaAlmacenadaSinFechas)?"Sin error, diferencia en salida fechas":"error posaz631 revisar";
         }
 
         if (respuesta.contains("Communication link failure")) {
@@ -302,8 +330,12 @@ public class GenerarEstadisticasResultados {
         	return "Bloquea prueba por error QIX;26373";
         }
         
-        System.out.println(respuesta);
-        System.out.println(respuestaAlmacenada);
+        if (respuesta.replaceAll(" ", "").equals(respuestaAlmacenada.replaceAll(" ", ""))) {
+            return "TRIM EN VALOR;25497";
+        }
+        
+        System.err.println(respuesta);
+        System.err.println(respuestaAlmacenada);
 
 
         System.out.println();

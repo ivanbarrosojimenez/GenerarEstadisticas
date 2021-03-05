@@ -1,10 +1,17 @@
 
 package main;
 
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.swing.filechooser.FileNameExtensionFilter;
+
+import estadisticas.BorrarDirectorio;
+import estadisticas.Comprimir;
 import estadisticas.GenerarEstadisticasResultados;
 import estadisticas.GrabarFichero;
 
@@ -38,53 +45,49 @@ public class Main {
 //    static String NOMBRE_FICHERO_ENTRADA_2_4 = "host4.json";
 //    static String NOMBRE_FICHERO_ENTRADA_1_5 = "sql6.json";
 //    static String NOMBRE_FICHERO_ENTRADA_2_5 = "host6.json";
-    
-	static int numFasesCrear = 2;
-	static String tipoResultado = "SQL"; //poner SQL o Db2;
+    /** * * * * * * * * * * * * * * * * * * * * * * * * * * */
+    /** - - - - - MODIFICAR SOLO ESTO - - - - -*/
+	static int numFasesCrear = 3;
+	static String tipoResultado = "Db2"; //poner SQL o Db2;
+	static boolean comprimirYEliminar = false;
+	/**  - - - FIN MODIFICAR SOLO ESTO - - - - -  */
+    /** * * * * * * * * * * * * * * * * * * * * * * * * * * */
 	
-    static String NOMBRE_FICHERO_SALIDA_FILTRADO = "ResultadoFiltrado_" + mdy +"_" +tipoResultado+ ".csv";
-
-	
-	
-	static String carpetaF1 = "F1resultados"+tipoResultado+"/";
-	static int numColeccionesF1 = 18;
-	
-	static String carpetaF2 = "F2resultados"+tipoResultado+"/";
-	static int numColeccionesF2 = 5;
-	
-	static String carpetaF3 = "F3resultados"+tipoResultado+"/";
-	static int numColeccionesF3 = 5;
-	
-	static String carpetaF4 = "resultado24feb"+tipoResultado+"/";
-	static int numColeccionesF4 = 5;
-	
-	static String carpetaF5 = "";
-	static int numColeccionesF5 = 0;
-	
-	static String carpetaF6 = "";
-	static int numColeccionesF6 = 0;
-	
-	static String carpetaF7 = "";
-	static int numColeccionesF7 = 0;
 	
     public static void main(String[] args) throws IOException {
         /** Estadisticas por transaccion NEWMAN */
-    	
+        String NOMBRE_FICHERO_SALIDA_FILTRADO = "ResultadoFiltrado_" + mdy +"_" +tipoResultado+ ".csv";
+
         GenerarEstadisticasResultados estadisticas = new GenerarEstadisticasResultados();
         GrabarFichero grabarFichero = new GrabarFichero();
         grabarFichero.crearFichero("salida/" + NOMBRE_FICHERO_SALIDA_FILTRADO, true);
         
-        for(int fase = 0; fase < numFasesCrear; fase++) {
-        	 for (int coleccion = 0; coleccion < obtenerCantidadFases()[fase]; coleccion++) {
-                 System.out.println(obtenerNombreFases()[fase] + "respuesta_" + coleccion + ".json");
-                 StringBuffer sF0 = estadisticas.obtenerSalidaNewMan(
-                		 obtenerNombreFases()[fase] + "respuesta_" + coleccion + ".json", coleccion == 0);
-                 grabarFichero.agregarAFichero(sF0.toString());
-             }
-        }
-        
 
+        for(int fase = 0, carpeta = 1; fase < numFasesCrear; fase++,carpeta++) {
+        	String nombreCarpetaFase ="F"+carpeta+"resultados"+tipoResultado; 
+        	File files[] = (new File(nombreCarpetaFase+"/")).listFiles(filtro);
+        	for (int i = 0; i < files.length; i++) {
+        		System.out.println(files[i].getName());
+				StringBuffer sF0 = estadisticas.obtenerSalidaNewMan(
+						nombreCarpetaFase+"/"+files[i].getName(), i == 0 && fase == 0);
+                grabarFichero.agregarAFichero(sF0.toString());
+			}
+        	//Comprimir y eliminar
+			if (comprimirYEliminar) {
+				if (Comprimir.comprimirCarpeta(nombreCarpetaFase)) {
+					File directorio = new File(nombreCarpetaFase);
+					if (BorrarDirectorio.deleteDirectory(directorio)) {
+						System.out.println("Directorio " + nombreCarpetaFase + " eliminado correctamente.");
+					} else {
+						System.err.println("Error al eliminar el directorio " + nombreCarpetaFase);
+					}
+				}
+			}
+		}
         grabarFichero.cerrarFichero();
+        
+             	
+ 
 
         /** Estadisticas por transaccion postman */
 
@@ -139,60 +142,12 @@ public class Main {
 
     }
 
-	private static String[] obtenerNombreFases() {
-		
-		String [] resultado = new String[numFasesCrear];
-		if (numFasesCrear >= 1) {
-			resultado[0] = carpetaF1;
-		}
-		if (numFasesCrear >= 2) {
-			resultado[1] = carpetaF2;
-		}
-		if (numFasesCrear >= 3) {
-			resultado[2] = carpetaF3;
-		}
-		if (numFasesCrear >= 4) {
-			resultado[3] = carpetaF4;
-		}
-		if (numFasesCrear >= 5) {
-			resultado[4] = carpetaF5;
-		}
-		if (numFasesCrear >= 6) {
-			resultado[5] = carpetaF6;
-		}
-		if (numFasesCrear >= 7) {
-			resultado[6] = carpetaF7;
-		}
-
-		return resultado;
-	}
 	
-	private static int[] obtenerCantidadFases() {
-
-		int[] resultado = new int[numFasesCrear];
-		if (numFasesCrear >= 1) {
-			resultado[0] = numColeccionesF1;
-		}
-		if (numFasesCrear >= 2) {
-			resultado[1] = numColeccionesF2;
-		}
-		if (numFasesCrear >= 3) {
-			resultado[2] = numColeccionesF3;
-		}
-		if (numFasesCrear >= 4) {
-			resultado[3] = numColeccionesF4;
-		}
-		if (numFasesCrear >= 5) {
-			resultado[4] = numColeccionesF5;
-		}
-		if (numFasesCrear >= 6) {
-			resultado[5] = numColeccionesF6;
-		}
-		if (numFasesCrear >= 7) {
-			resultado[6] = numColeccionesF7;
-		}
-
-		return resultado;
-	}
+	static FilenameFilter filtro = new FilenameFilter() {
+	    @Override
+	    public boolean accept(File dir, String name) {
+	        return name.toLowerCase().endsWith(".json");
+	    }
+	};
 
 }
