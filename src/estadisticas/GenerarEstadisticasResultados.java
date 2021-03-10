@@ -101,11 +101,15 @@ public class GenerarEstadisticasResultados {
         }
     }
 
-    public StringBuffer obtenerSalidaNewMan(String f1, boolean generaCabecera) throws IOException {
+    public StringBuffer obtenerSalidaNewMan(String f1, boolean generaCabecera, String ficheroSalidaErrores) throws IOException {
         StringBuffer sfRespuesta = new StringBuffer();
         JSONParser parser = new JSONParser();
         FileReader fr =  null;
+        GrabarFichero grabarFichero = null;
          try {
+        	 grabarFichero = new GrabarFichero();
+             grabarFichero.abrirFichero("salidaErrores/" + ficheroSalidaErrores, true);
+
             // Pares de ficheros, poner de dos en dos
         	fr = new FileReader(f1);
             Object obj1 = parser.parse(fr);
@@ -128,6 +132,10 @@ public class GenerarEstadisticasResultados {
                 JSONObject execution = (JSONObject) executions.get(i);
                 JSONObject item = (JSONObject) execution.get("item");
                 String nombre = (String) item.get("name");
+               
+                JSONObject request = (JSONObject) item.get("request");
+                JSONObject body = (JSONObject) request.get("body");
+                String llamada = (String) body.get("raw");
 
                 String transaccion = obtenerTransaccion(nombre);
 
@@ -196,7 +204,18 @@ public class GenerarEstadisticasResultados {
                 }
                 linea += ";" + resultadoGlobal + ";" + errorDetectado;
                 errorDetectado = "";
-
+                //CREAR FICHERO CON LOS ERRORES PARA CREAR COLECCIONES
+                if(!resultadoGlobal) {
+                	grabarFichero.agregarAFichero("############ JSON DE LLAMADA #############\r\n");
+                	grabarFichero.agregarAFicheroExistente(llamada.replaceAll("\r\n", "")+"\r\n");
+                	grabarFichero.agregarAFichero("############ TIEMPOS #############\r\n");
+                	if(llamada.contains("POSLZ167Operation")) {
+                		System.out.println();
+                		System.err.println(llamada.replaceAll("\r\n", ""));
+                	}
+                	
+                }
+                
                 //System.out.println(linea);
                 sfRespuesta.append(linea);
                 sfRespuesta.append("\r\n");
@@ -212,7 +231,7 @@ public class GenerarEstadisticasResultados {
         }
         finally {
         	fr.close();
-        	
+        	grabarFichero.cerrarFichero();
             return sfRespuesta;
         }
     }
@@ -334,8 +353,8 @@ public class GenerarEstadisticasResultados {
             return "TRIM EN VALOR;25497";
         }
         
-        System.err.println(respuesta);
-        System.err.println(respuestaAlmacenada);
+//        System.err.println(respuesta);
+//        System.err.println(respuestaAlmacenada);
 
 
         System.out.println();

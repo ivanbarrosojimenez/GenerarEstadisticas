@@ -47,7 +47,7 @@ public class Main {
 //    static String NOMBRE_FICHERO_ENTRADA_2_5 = "host6.json";
     /** * * * * * * * * * * * * * * * * * * * * * * * * * * */
     /** - - - - - MODIFICAR SOLO ESTO - - - - -*/
-	static int numFasesCrear = 3;
+	static int numFasesCrear = 4;//Si se quiere ejecutar solo una fase cambiar tambien donde pone carpeta con el mismo numero (L67)
 	static String tipoResultado = "Db2"; //poner SQL o Db2;
 	static boolean comprimirYEliminar = false;
 	/**  - - - FIN MODIFICAR SOLO ESTO - - - - -  */
@@ -57,19 +57,20 @@ public class Main {
     public static void main(String[] args) throws IOException {
         /** Estadisticas por transaccion NEWMAN */
         String NOMBRE_FICHERO_SALIDA_FILTRADO = "ResultadoFiltrado_" + mdy +"_" +tipoResultado+ ".csv";
+        String FICHERO_LLAMADAS_CON_ERROR = "llamadas_con_error" + mdy +"_" +tipoResultado+ ".txt";
 
         GenerarEstadisticasResultados estadisticas = new GenerarEstadisticasResultados();
         GrabarFichero grabarFichero = new GrabarFichero();
         grabarFichero.crearFichero("salida/" + NOMBRE_FICHERO_SALIDA_FILTRADO, true);
-        
 
-        for(int fase = 0, carpeta = 1; fase < numFasesCrear; fase++,carpeta++) {
+
+        for(int fase = 0, carpeta = 4; carpeta <= numFasesCrear; fase++,carpeta++) {
         	String nombreCarpetaFase ="F"+carpeta+"resultados"+tipoResultado; 
         	File files[] = (new File(nombreCarpetaFase+"/")).listFiles(filtro);
         	for (int i = 0; i < files.length; i++) {
         		System.out.println(files[i].getName());
 				StringBuffer sF0 = estadisticas.obtenerSalidaNewMan(
-						nombreCarpetaFase+"/"+files[i].getName(), i == 0 && fase == 0);
+						nombreCarpetaFase+"/"+files[i].getName(), i == 0 && fase == 0, FICHERO_LLAMADAS_CON_ERROR);
                 grabarFichero.agregarAFichero(sF0.toString());
 			}
         	//Comprimir y eliminar
