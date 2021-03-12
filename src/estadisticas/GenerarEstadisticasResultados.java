@@ -229,75 +229,84 @@ public class GenerarEstadisticasResultados {
 		}
 	}
 
+	/**
+	 * Obtiene el tipo de error localizado comparando las respuesta de mainframe y raincode
+	 * @param respuesta
+	 * @param respuestaAlmacenada
+	 * @param responseCode
+	 * @return tipo de error localizado
+	 */
 	private String obtenerTipoDeError(String respuesta, String respuestaAlmacenada, Long responseCode) {
 		try {
+			//AL INICIO SE DEBEN PONER LOS ERRORES NO SOLUCIONADOS PARA OBTENER MEJOR RENDIMIENTO.
+			
 			/// Identificar el tipo de error según el retorno de las respuestas
-			if (responseCode.equals(504l)) {
-				return "error 504;25935";
+			if (ComprobarErrores.hayError504(respuesta, respuestaAlmacenada, responseCode)) {
+				return "error 504[25935];25935";
 			}
-			// if (respuesta.startsWith("{\"POSAZ526OperationResponse")) {
-			// return "Copy modificada por mainframe";
-			// }
-
-			if (respuesta.contains("OUTPUT_OVERFLOW")) {
-				return "OUTPUT_OVERFLOW;25933";
+			
+			if (ComprobarErrores.hayErrorOverflow(respuesta, respuestaAlmacenada, responseCode)) {
+				return "OUTPUT_OVERFLOW[25933];25933";
 			}
-			if (respuesta.contains("PGMIDERR")) {
-				return "PGMIDERR;25561";
+			
+			if (ComprobarErrores.hayErrorPgmiderr(respuesta, respuestaAlmacenada, responseCode)) {
+				return "PGMIDERR[25561];25561";
 			}
-			if (respuesta.contains("System.Int32")) {
-
-				return "System.Int32;25489";
+			
+			if (ComprobarErrores.hayErrorInt32(respuesta, respuestaAlmacenada, responseCode)) {
+				return "System.Int32[25489];25489";
 			}
-			if (respuesta.contains("UNDEFINED_ELEMENT")) {
-				if (respuesta.contains("UNDEFINED_ELEMENT System.Decimal")) {
-					return "System.Decimal;26372";
-				}
-				return "UNDEFINED_ELEMENT;26151";
+			
+			if (ComprobarErrores.hayErrorDecimal(respuesta, respuestaAlmacenada, responseCode)) {
+				return "System.Int32[25489];25489";
 			}
-
-			if (respuesta.contains("dfhcommarea")) {
-				return "dfhcommarea;25491";
+			
+			if (ComprobarErrores.hayErrorUndefinedElement(respuesta, respuestaAlmacenada, responseCode)) {
+				return "UNDEFINED_ELEMENT[26151];26151";
 			}
 
-			if (respuesta.contains(" -104")) {
-				return "SQL ERROR -104;25127";
-			}
-			if (respuesta.contains("-30081")) {
-				return "SQL ERROR -30081;26558";
+			if (ComprobarErrores.hayErrorDfhcommarea(respuesta, respuestaAlmacenada, responseCode)) {
+				return "dfhcommarea[25491];25491";
 			}
 
-			if (respuesta.contains(" -99999")) {
-				return "SQL ERROR -99999;25177";
+			if (ComprobarErrores.hayError104(respuesta, respuestaAlmacenada, responseCode)) {
+				return "SQL -104[25127];25127";
 			}
-			// if (respuesta.contains(" -180")) {
-			// return "SQL ERROR -99999;25177";
-			// }
-			//
-
-			if (respuesta.contains(" -969")) {
-				return "SQL ERROR -969;25897";
+			
+			if (ComprobarErrores.hayError30081(respuesta, respuestaAlmacenada, responseCode)) {
+				return "SQL -30081[26558];26558";
 			}
 
+			if (ComprobarErrores.hayError99999(respuesta, respuestaAlmacenada, responseCode)) {
+				return "SQL -99999[25177];25177";
+			}
+
+			if (ComprobarErrores.hayError969(respuesta, respuestaAlmacenada, responseCode)) {
+				return "SQL -969[25897];25897";
+			}
+
+			//TODO ADAPTAR PARA OTROS ERRORES
 			// Parche para error 593 (llega a en lugar de rgsao593)
 			if (respuesta.replaceAll("\"a\"", "\"rgsao593e\"").equals(respuestaAlmacenada)) {
-				return "Error redefines copy;25494";
+				return "Error redefines[25494];25494";
 			}
-			if (respuestaAlmacenada.contains("RLEL")) {
-				return "RLEL en respuesta host, repetir prueba";
-			}
-
-			if (respuesta.contains("Could not load module")) {
-				return "Could not load module;26119";
-			}
-			if (respuesta.contains("current state is Closed")) {
-				return "ExecuteNonQuery;26240";
-			}
-			if (respuesta.contains("Range error")) {
-				return "Range error;25493";
+			
+			if (ComprobarErrores.hayErrorRlel(respuesta, respuestaAlmacenada, responseCode)) {
+				return "RLEL mainframe;;";
 			}
 
-			if (respuesta.contains("QIX LINK")) {
+			if (ComprobarErrores.hayErrorCouldNotLoadModule(respuesta, respuestaAlmacenada, responseCode)) {
+				return "Could not load module[26119];26119";
+			}
+			
+			if (ComprobarErrores.hayErrorCurrentStateIsClosed(respuesta, respuestaAlmacenada, responseCode)) {
+				return "ExecuteNonQuery[26240];26240";
+			}
+			if (ComprobarErrores.hayErrorRangeError(respuesta, respuestaAlmacenada, responseCode)) {
+				return "Range error[25493];25493";
+			}
+
+			if (ComprobarErrores.hayErrorQIX(respuesta, respuestaAlmacenada, responseCode)) {
 				return "QIX LINK;26373";
 			}
 
@@ -379,8 +388,12 @@ public class GenerarEstadisticasResultados {
 				}
 				Collections.sort(listaRespuesta);
 				Collections.sort(listaRespuestaAlmacecnada);
-//				System.out.println(listaRespuesta);
-//				System.out.println(listaRespuestaAlmacecnada);
+				
+//					System.out.println(listaRespuesta);
+//					System.out.println(listaRespuestaAlmacecnada);
+//					System.out.println("");
+				
+
 				boolean diferente = false;
 				diferente = !(listaRespuesta.size() == listaRespuestaAlmacecnada.size());
 				if (listaRespuesta.size() > listaRespuestaAlmacecnada.size()) {
@@ -412,6 +425,51 @@ public class GenerarEstadisticasResultados {
 					&& !respuesta.contains("Failure interacting with CICS")){
 				return "CICS mainframe";
 			}
+			
+			
+			//Comprobacion de caracteres raros
+//			if(respuesta.startsWith("{\"POSAZ592OperationResponse")) {
+				try {
+					String cleanAlmacenado = respuestaAlmacenada.replaceAll("\\P{Print}", "");
+					String clean = respuesta.replaceAll("\\P{Print}", "");
+				
+//					System.out.println(respuesta);
+//					System.out.println(respuestaAlmacenada);
+					cleanAlmacenado = cleanAlmacenado.replaceAll(" ", "");
+					clean = clean.replaceAll(" ", "");
+
+//					System.err.println(cleanAlmacenado);
+//					System.err.println(clean);
+//					System.out.println(".");
+					if (clean.equals(cleanAlmacenado)) {
+						System.out.println("Error codificacion");
+						return "Error codificacion";
+					}
+					
+					//Validar partes dinamicas 503
+					if(respuesta.startsWith("{\"POSAZ503OperationResponse")) {
+						if (cleanAlmacenado.replaceAll(" ", "").substring(0, 2292)
+								.equals(clean.replaceAll(" ", "").substring(0, 2292))
+								&& (cleanAlmacenado.replaceAll(" ", "").substring(2300)
+										.equals(clean.replaceAll(" ", "").substring(2300))
+										|| cleanAlmacenado.replaceAll(" ", "").substring(2300)
+												.equals(clean.replaceAll(" ", "").substring(2301)))) {
+							return "error codificación caracteres";
+						}
+					}
+					
+					
+
+				} catch (Exception e) {
+					System.out.println(e);
+					e.printStackTrace();
+				}
+//			}
+			
+			
+			//fin de comprobar caracteres raros
+			
+			
 			if (respuestaAlmacenada.contains("\\//")) {
 				// TODO TRATAMIENTO SACAR PATRON
 
@@ -420,42 +478,7 @@ public class GenerarEstadisticasResultados {
 				// TODO TRATAMIENTO SACAR PATRON
 				return "error respuesta vacia;";
 			} else if (respuestaAlmacenada.contains("\\/")) {
-				try {
-
-
-					System.out.println(respuesta);
-					System.out.println(respuestaAlmacenada);
-					String clean2 = respuestaAlmacenada.replaceAll("\\P{Print}", "");
-					System.err.println(clean2.replaceAll(" ", ""));
-
-
-					String clean = respuesta.replaceAll("\\P{Print}", "");
-					System.out.println(clean.replaceAll(" ", ""));
-					if (clean.equals(clean2)) {
-						return "Error caracteres codificacion";
-					}
-					
-					//Validar partes dinamicas 503
-					if(respuesta.startsWith("{\"POSAZ503OperationResponse")) {
-						if (clean2.replaceAll(" ", "").substring(0, 2292)
-								.equals(clean.replaceAll(" ", "").substring(0, 2292))
-								&& (clean2.replaceAll(" ", "").substring(2300)
-										.equals(clean.replaceAll(" ", "").substring(2300))
-										|| clean2.replaceAll(" ", "").substring(2300)
-												.equals(clean.replaceAll(" ", "").substring(2301)))) {
-							return "error codificación caracteres";
-						}
-					}
-					
-					
-
-					return "error backslash simple;25490";
-				} catch (Exception e) {
-					System.out.println(e);
-					e.printStackTrace();
-					return "error backslash simple;25490";
-
-				}
+				return "error backslash simple;25490";
 			}
 
 			
@@ -466,6 +489,11 @@ public class GenerarEstadisticasResultados {
 //			}
 
 			// }
+			if(respuesta.startsWith("{\"POSAZ620OperationResponse")) {
+				if(!respuesta.substring(592, 593).equals(respuestaAlmacenada.substring(592, 593))) {
+					return "num reg. diferente";
+				}
+			}
 		} catch (Exception e) {
 			System.err.println(e);
 			e.printStackTrace();
