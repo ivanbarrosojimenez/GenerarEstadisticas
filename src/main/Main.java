@@ -64,11 +64,11 @@ public class Main {
         grabarFichero.crearFichero("salida/" + NOMBRE_FICHERO_SALIDA_FILTRADO, true);
 
 
-        for(int fase = 0, carpeta = 4; carpeta <= numFasesCrear; fase++,carpeta++) {
+        for(int fase = 0, carpeta = 1; carpeta <= numFasesCrear; fase++,carpeta++) {
         	String nombreCarpetaFase ="F"+carpeta+"resultados"+tipoResultado; 
         	File files[] = (new File(nombreCarpetaFase+"/")).listFiles(filtro);
         	for (int i = 0; i < files.length; i++) {
-        		System.out.println(files[i].getName());
+        		//System.out.println(files[i].getName());
 				StringBuffer sF0 = estadisticas.obtenerSalidaNewMan(
 						nombreCarpetaFase+"/"+files[i].getName(), i == 0 && fase == 0, FICHERO_LLAMADAS_CON_ERROR);
                 grabarFichero.agregarAFichero(sF0.toString());
