@@ -310,7 +310,7 @@ public class GenerarEstadisticasResultados {
 			}
 
 			if (ComprobarErrores.hayErrorQIX(respuesta, respuestaAlmacenada, responseCode)) {
-				return "QIX LINK;26373";
+				return "QIX LINK[26373];26373";
 			}
 
 			// Parche para validar la parte dinamica en respuesta del 631
@@ -319,11 +319,11 @@ public class GenerarEstadisticasResultados {
 			}
 
 			if (ComprobarErrores.hayErrorPOSAZ611CaracterCod(respuesta, respuestaAlmacenada, responseCode)) {
-				return "Error caracter codificación;26963";
+				return "Error caracter codificación[26963];26963";
 			}
 
-			if (respuesta.contains("Communication link failure")) {
-				return "Communication link failure;26030";
+			if (ComprobarErrores.hayErrorCommunicationLink(respuesta, respuestaAlmacenada, responseCode)) {
+				return "Communication link failure[26030];26030";
 			}
 
 			if (respuesta.startsWith("{\"POSMZ140OperationResponse")) {

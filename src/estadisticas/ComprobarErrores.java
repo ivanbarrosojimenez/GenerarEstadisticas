@@ -230,4 +230,15 @@ public class ComprobarErrores {
 		return false;
 	}
 	
+	/**
+	 * Comprueba si la respuesta contiene la cadena Communication link failure
+	 * @param respuesta
+	 * @param respuestaAlmacenada
+	 * @param codigoRetorno
+	 * @return true si contiene la cadena
+	 */
+	public static boolean hayErrorCommunicationLink(String respuesta, String respuestaAlmacenada, long responseCode) {
+		return (respuesta.contains("Communication link failureCommunication link failure"));
+	}
+
 }
