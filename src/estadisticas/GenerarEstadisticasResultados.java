@@ -247,6 +247,10 @@ public class GenerarEstadisticasResultados {
 			if (ComprobarErrores.hayError504(respuesta, respuestaAlmacenada, responseCode)) {
 				return "error 504[25935];25935";
 			}
+			
+			if (ComprobarErrores.hayError503(respuesta, respuestaAlmacenada, responseCode)) {
+				return "error 503 posible pase;";
+			}
 
 			if (ComprobarErrores.hayErrorOverflow(respuesta, respuestaAlmacenada, responseCode)) {
 				return "OUTPUT_OVERFLOW[25933];25933";

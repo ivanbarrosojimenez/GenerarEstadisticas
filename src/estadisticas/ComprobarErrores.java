@@ -14,6 +14,17 @@ public class ComprobarErrores {
 	}
 	
 	/**
+	 * Comprueba si la respuesta tiene un codigo 503
+	 * @param respuesta
+	 * @param respuestaAlmacenada
+	 * @param codigoRetorno
+	 * @return true si contiene error 503
+	 */
+	public static boolean hayError503(String respuesta, String respuestaAlmacenada, long responseCode) {
+		return(responseCode == 503);
+	}
+	
+	/**
 	 * Comprueba si la respuesta contiene la cadena OUTPUT_OVERFLOW
 	 * @param respuesta
 	 * @param respuestaAlmacenada
