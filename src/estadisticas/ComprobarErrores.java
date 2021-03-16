@@ -179,5 +179,55 @@ public class ComprobarErrores {
 		return (respuesta.contains("QIX LINK"));
 	}
 	
+	/**
+	 * Comprueba si la respuesta es valida para la transaccion 631 (contiene parte dinamica con la fecha hh mm ss actualues)
+	 * @param respuesta
+	 * @param respuestaAlmacenada
+	 * @param codigoRetorno
+	 * @return true si es valida
+	 */
+	public static boolean hayErrorPOSAZ631(String respuesta, String respuestaAlmacenada, long responseCode) {
+		if (respuesta.startsWith("{\"POSAZ631OperationResponse")) {
+			String respuestaSinFechas = respuesta
+					.replace(respuesta.substring(respuesta.indexOf("fec_ult_proceso_s"),
+							respuesta.indexOf("fec_ult_proceso_s") + 39), "")
+					.replace(respuesta.substring(respuesta.indexOf("fec_modificacion_s"),
+							respuesta.indexOf("fec_modificacion_s") + 39), "");
+
+			String respuestaAlmacenadaSinFechas = respuesta
+					.replace(respuesta.substring(respuesta.indexOf("fec_ult_proceso_s"),
+							respuesta.indexOf("fec_ult_proceso_s") + 39), "")
+					.replace(respuesta.substring(respuesta.indexOf("fec_modificacion_s"),
+							respuesta.indexOf("fec_modificacion_s") + 39), "");
+			// System.out.println(respuestaSinFechas);
+			// System.out.println(respuestaAlmacenadaSinFechas);
+			// System.out.println(respuestaSinFechas.equals(respuestaAlmacenadaSinFechas));
+			//
+			return respuestaSinFechas.equals(respuestaAlmacenadaSinFechas);
+		}
+		return false;
+	}
+	
+	/**
+	 * Comprueba si la respuesta es valida para la transaccion 611 controlando \n por ?
+	 * @param respuesta
+	 * @param respuestaAlmacenada
+	 * @param codigoRetorno
+	 * @return true si es valida
+	 */
+	public static boolean hayErrorPOSAZ611CaracterCod(String respuesta, String respuestaAlmacenada, long responseCode) {
+		if (respuesta.startsWith("{\"POSAZ611OperationResponse")) {
+			try {
+				// System.out.println(respuestaAlmacenada);
+				// System.out.println();
+				// System.out.println(respuesta.replaceAll("\\?", "\\\\n"));
+				return (respuestaAlmacenada.equals(respuesta.replaceAll("\\?", "\\\\n")));
+			} catch (Exception e) {
+				System.out.println(e);
+			}
+
+		}
+		return false;
+	}
 	
 }

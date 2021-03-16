@@ -97,9 +97,9 @@ public class GenerarEstadisticasResultados {
 
 		} catch (Exception e) {
 			System.err.println(e);
-		} finally {
-			return sfRespuesta;
 		}
+		return sfRespuesta;
+
 	}
 
 	public StringBuffer obtenerSalidaNewMan(String f1, boolean generaCabecera, String ficheroSalidaErrores)
@@ -230,7 +230,9 @@ public class GenerarEstadisticasResultados {
 	}
 
 	/**
-	 * Obtiene el tipo de error localizado comparando las respuesta de mainframe y raincode
+	 * Obtiene el tipo de error localizado comparando las respuesta de mainframe y
+	 * raincode
+	 * 
 	 * @param respuesta
 	 * @param respuestaAlmacenada
 	 * @param responseCode
@@ -238,29 +240,30 @@ public class GenerarEstadisticasResultados {
 	 */
 	private String obtenerTipoDeError(String respuesta, String respuestaAlmacenada, Long responseCode) {
 		try {
-			//AL INICIO SE DEBEN PONER LOS ERRORES NO SOLUCIONADOS PARA OBTENER MEJOR RENDIMIENTO.
-			
+			// AL INICIO SE DEBEN PONER LOS ERRORES NO SOLUCIONADOS PARA OBTENER MEJOR
+			// RENDIMIENTO.
+
 			/// Identificar el tipo de error según el retorno de las respuestas
 			if (ComprobarErrores.hayError504(respuesta, respuestaAlmacenada, responseCode)) {
 				return "error 504[25935];25935";
 			}
-			
+
 			if (ComprobarErrores.hayErrorOverflow(respuesta, respuestaAlmacenada, responseCode)) {
 				return "OUTPUT_OVERFLOW[25933];25933";
 			}
-			
+
 			if (ComprobarErrores.hayErrorPgmiderr(respuesta, respuestaAlmacenada, responseCode)) {
 				return "PGMIDERR[25561];25561";
 			}
-			
+
 			if (ComprobarErrores.hayErrorInt32(respuesta, respuestaAlmacenada, responseCode)) {
 				return "System.Int32[25489];25489";
 			}
-			
+
 			if (ComprobarErrores.hayErrorDecimal(respuesta, respuestaAlmacenada, responseCode)) {
 				return "System.Int32[25489];25489";
 			}
-			
+
 			if (ComprobarErrores.hayErrorUndefinedElement(respuesta, respuestaAlmacenada, responseCode)) {
 				return "UNDEFINED_ELEMENT[26151];26151";
 			}
@@ -272,7 +275,7 @@ public class GenerarEstadisticasResultados {
 			if (ComprobarErrores.hayError104(respuesta, respuestaAlmacenada, responseCode)) {
 				return "SQL -104[25127];25127";
 			}
-			
+
 			if (ComprobarErrores.hayError30081(respuesta, respuestaAlmacenada, responseCode)) {
 				return "SQL -30081[26558];26558";
 			}
@@ -285,12 +288,12 @@ public class GenerarEstadisticasResultados {
 				return "SQL -969[25897];25897";
 			}
 
-			//TODO ADAPTAR PARA OTROS ERRORES
+			// TODO ADAPTAR PARA OTROS ERRORES
 			// Parche para error 593 (llega a en lugar de rgsao593)
 			if (respuesta.replaceAll("\"a\"", "\"rgsao593e\"").equals(respuestaAlmacenada)) {
 				return "Error redefines[25494];25494";
 			}
-			
+
 			if (ComprobarErrores.hayErrorRlel(respuesta, respuestaAlmacenada, responseCode)) {
 				return "RLEL mainframe;;";
 			}
@@ -298,7 +301,7 @@ public class GenerarEstadisticasResultados {
 			if (ComprobarErrores.hayErrorCouldNotLoadModule(respuesta, respuestaAlmacenada, responseCode)) {
 				return "Could not load module[26119];26119";
 			}
-			
+
 			if (ComprobarErrores.hayErrorCurrentStateIsClosed(respuesta, respuestaAlmacenada, responseCode)) {
 				return "ExecuteNonQuery[26240];26240";
 			}
@@ -311,39 +314,12 @@ public class GenerarEstadisticasResultados {
 			}
 
 			// Parche para validar la parte dinamica en respuesta del 631
-			if (respuesta.startsWith("{\"POSAZ631OperationResponse")) {
-				String respuestaSinFechas = respuesta
-						.replace(respuesta.substring(respuesta.indexOf("fec_ult_proceso_s"),
-								respuesta.indexOf("fec_ult_proceso_s") + 39), "")
-						.replace(respuesta.substring(respuesta.indexOf("fec_modificacion_s"),
-								respuesta.indexOf("fec_modificacion_s") + 39), "");
-
-				String respuestaAlmacenadaSinFechas = respuesta
-						.replace(respuesta.substring(respuesta.indexOf("fec_ult_proceso_s"),
-								respuesta.indexOf("fec_ult_proceso_s") + 39), "")
-						.replace(respuesta.substring(respuesta.indexOf("fec_modificacion_s"),
-								respuesta.indexOf("fec_modificacion_s") + 39), "");
-				// System.out.println(respuestaSinFechas);
-				// System.out.println(respuestaAlmacenadaSinFechas);
-				// System.out.println(respuestaSinFechas.equals(respuestaAlmacenadaSinFechas));
-				//
-				return respuestaSinFechas.equals(respuestaAlmacenadaSinFechas)
-						? "Sin error, diferencia en salida fechas"
-						: "error posaz631 revisar";
+			if (ComprobarErrores.hayErrorPOSAZ631(respuesta, respuestaAlmacenada, responseCode)) {
+				return "error posaz631 revisar";
 			}
 
-			if (respuesta.startsWith("{\"POSAZ611OperationResponse")) {
-				try {
-					// System.out.println(respuestaAlmacenada);
-					// System.out.println();
-					// System.out.println(respuesta.replaceAll("\\?", "\\\\n"));
-					if (respuestaAlmacenada.equals(respuesta.replaceAll("\\?", "\\\\n"))) {
-						return "Error caracter codificación;26963";
-					}
-				} catch (Exception e) {
-					System.out.println(e);
-				}
-
+			if (ComprobarErrores.hayErrorPOSAZ611CaracterCod(respuesta, respuestaAlmacenada, responseCode)) {
+				return "Error caracter codificación;26963";
 			}
 
 			if (respuesta.contains("Communication link failure")) {
@@ -355,7 +331,7 @@ public class GenerarEstadisticasResultados {
 			}
 
 			if (respuesta.replaceAll(" ", "").equals(respuestaAlmacenada.replaceAll(" ", ""))) {
-				return "TRIM EN VALOR;25497";
+				return "TRIM EN VALOR[25497];25497";
 			}
 
 			// if(respuestaAlmacenada.replaceAll("ƒÂ", "?").equals(respuesta)) {
@@ -368,36 +344,31 @@ public class GenerarEstadisticasResultados {
 				System.out.println(respuestaAlmacenada);
 				return "CARACTER-DESBORDAMIENTO;25493";
 			}
-			
-			
-			
-			
-			// if (respuesta.startsWith("{\"POSAZ634OperationResponse") ||
-			// respuesta.startsWith("{\"POSAZ620OperationResponse")) {
-			// longitud de la comarea
+
+			/**Para validar distinto orden junto a espacios de mas*/
 			try {
-				char[] caracteresRespuesta = respuesta.toCharArray();
+				char[] caracteresRespuesta = respuesta.replaceAll(" ", "").toCharArray();
 				List<Character> listaRespuesta = new ArrayList<Character>();
 				for (char c : caracteresRespuesta) {
 					listaRespuesta.add(c);
 				}
-				char[] caracteresRespuestaAlmacenada = respuestaAlmacenada.toCharArray();
+				char[] caracteresRespuestaAlmacenada = respuestaAlmacenada.replaceAll(" ", "").toCharArray();
 				List<Character> listaRespuestaAlmacecnada = new ArrayList<Character>();
 				for (char c : caracteresRespuestaAlmacenada) {
 					listaRespuestaAlmacecnada.add(c);
 				}
 				Collections.sort(listaRespuesta);
 				Collections.sort(listaRespuestaAlmacecnada);
-				
+
 //					System.out.println(listaRespuesta);
 //					System.out.println(listaRespuestaAlmacecnada);
 //					System.out.println("");
-				
 
 				boolean diferente = false;
 				diferente = !(listaRespuesta.size() == listaRespuestaAlmacecnada.size());
 				if (listaRespuesta.size() > listaRespuestaAlmacecnada.size()) {
-					for (int i = 0; i < listaRespuesta.size() && i < listaRespuestaAlmacecnada.size()  && !diferente; i++) {
+					for (int i = 0; i < listaRespuesta.size() && i < listaRespuestaAlmacecnada.size()
+							&& !diferente; i++) {
 						if (!listaRespuesta.get(i).equals(listaRespuestaAlmacecnada.get(i))) {
 							diferente = true;
 						}
@@ -411,65 +382,104 @@ public class GenerarEstadisticasResultados {
 						}
 					}
 				}
-				if(!diferente) {
+				if (!diferente) {
 					System.out.println("orden raro");
-					return ("Respuesta con distinto orden;26959");				
+					return ("Respuesta distinto orden / TRIM VALOR  [26959][25497];26959-25497");
 				}
-
 
 			} catch (Exception e) {
 				System.err.println(e);
 			}
 			
-			if(respuestaAlmacenada.contains("Failure interacting with CICS")
-					&& !respuesta.contains("Failure interacting with CICS")){
+			try {
+				char[] caracteresRespuesta = respuesta.toCharArray();
+				List<Character> listaRespuesta = new ArrayList<Character>();
+				for (char c : caracteresRespuesta) {
+					listaRespuesta.add(c);
+				}
+				char[] caracteresRespuestaAlmacenada = respuestaAlmacenada.toCharArray();
+				List<Character> listaRespuestaAlmacecnada = new ArrayList<Character>();
+				for (char c : caracteresRespuestaAlmacenada) {
+					listaRespuestaAlmacecnada.add(c);
+				}
+				Collections.sort(listaRespuesta);
+				Collections.sort(listaRespuestaAlmacecnada);
+
+//					System.out.println(listaRespuesta);
+//					System.out.println(listaRespuestaAlmacecnada);
+//					System.out.println("");
+
+				boolean diferente = false;
+				diferente = !(listaRespuesta.size() == listaRespuestaAlmacecnada.size());
+				if (listaRespuesta.size() > listaRespuestaAlmacecnada.size()) {
+					for (int i = 0; i < listaRespuesta.size() && i < listaRespuestaAlmacecnada.size()
+							&& !diferente; i++) {
+						if (!listaRespuesta.get(i).equals(listaRespuestaAlmacecnada.get(i))) {
+							diferente = true;
+						}
+
+					}
+
+				} else {
+					for (int i = 0; i < listaRespuesta.size() && i < listaRespuesta.size() && !diferente; i++) {
+						if (!listaRespuestaAlmacecnada.get(i).equals(listaRespuesta.get(i))) {
+							diferente = true;
+						}
+					}
+				}
+				if (!diferente) {
+					System.out.println("orden raro");
+					return ("Respuesta con distinto orden[26959];26959");
+				}
+
+			} catch (Exception e) {
+				System.err.println(e);
+			}
+
+			if (respuestaAlmacenada.contains("Failure interacting with CICS")
+					&& !respuesta.contains("Failure interacting with CICS")) {
 				return "CICS mainframe";
 			}
-			
-			
-			//Comprobacion de caracteres raros
+
+			// Comprobacion de caracteres raros
 //			if(respuesta.startsWith("{\"POSAZ592OperationResponse")) {
-				try {
-					String cleanAlmacenado = respuestaAlmacenada.replaceAll("\\P{Print}", "");
-					String clean = respuesta.replaceAll("\\P{Print}", "");
-				
+			try {
+				String cleanAlmacenado = respuestaAlmacenada.replaceAll("\\P{Print}", "");
+				String clean = respuesta.replaceAll("\\P{Print}", "");
+
 //					System.out.println(respuesta);
 //					System.out.println(respuestaAlmacenada);
-					cleanAlmacenado = cleanAlmacenado.replaceAll(" ", "");
-					clean = clean.replaceAll(" ", "");
+				cleanAlmacenado = cleanAlmacenado.replaceAll(" ", "");
+				clean = clean.replaceAll(" ", "");
 
 //					System.err.println(cleanAlmacenado);
 //					System.err.println(clean);
 //					System.out.println(".");
-					if (clean.equals(cleanAlmacenado)) {
-						System.out.println("Error codificacion");
-						return "Error codificacion";
-					}
-					
-					//Validar partes dinamicas 503
-					if(respuesta.startsWith("{\"POSAZ503OperationResponse")) {
-						if (cleanAlmacenado.replaceAll(" ", "").substring(0, 2292)
-								.equals(clean.replaceAll(" ", "").substring(0, 2292))
-								&& (cleanAlmacenado.replaceAll(" ", "").substring(2300)
-										.equals(clean.replaceAll(" ", "").substring(2300))
-										|| cleanAlmacenado.replaceAll(" ", "").substring(2300)
-												.equals(clean.replaceAll(" ", "").substring(2301)))) {
-							return "error codificación caracteres";
-						}
-					}
-					
-					
-
-				} catch (Exception e) {
-					System.out.println(e);
-					e.printStackTrace();
+				if (clean.equals(cleanAlmacenado)) {
+					System.out.println("Error codificacion");
+					return "Error codificacion";
 				}
+
+				// Validar partes dinamicas 503
+				if (respuesta.startsWith("{\"POSAZ503OperationResponse")) {
+					if (cleanAlmacenado.replaceAll(" ", "").substring(0, 2292)
+							.equals(clean.replaceAll(" ", "").substring(0, 2292))
+							&& (cleanAlmacenado.replaceAll(" ", "").substring(2300)
+									.equals(clean.replaceAll(" ", "").substring(2300))
+									|| cleanAlmacenado.replaceAll(" ", "").substring(2300)
+											.equals(clean.replaceAll(" ", "").substring(2301)))) {
+						return "error codificación caracteres";
+					}
+				}
+
+			} catch (Exception e) {
+				System.out.println(e);
+				e.printStackTrace();
+			}
 //			}
-			
-			
-			//fin de comprobar caracteres raros
-			
-			
+
+			// fin de comprobar caracteres raros
+
 			if (respuestaAlmacenada.contains("\\//")) {
 				// TODO TRATAMIENTO SACAR PATRON
 
@@ -481,7 +491,6 @@ public class GenerarEstadisticasResultados {
 				return "error backslash simple;25490";
 			}
 
-			
 //			if (respuesta.length() > 356 && respuestaAlmacenada.length() > 356) {
 //				if (respuesta.substring(0, 357).equals(respuestaAlmacenada.substring(0, 357))) {
 //					return "Error en orden salida occurs;";
@@ -489,9 +498,9 @@ public class GenerarEstadisticasResultados {
 //			}
 
 			// }
-			if(respuesta.startsWith("{\"POSAZ620OperationResponse")) {
-				if(!respuesta.substring(592, 593).equals(respuestaAlmacenada.substring(592, 593))) {
-					return "num reg. diferente";
+			if (respuesta.startsWith("{\"POSAZ620OperationResponse")) {
+				if (!respuesta.substring(592, 593).equals(respuestaAlmacenada.substring(592, 593))) {
+					return "num reg. diferente[27526];27526";
 				}
 			}
 		} catch (Exception e) {
