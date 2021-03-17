@@ -251,5 +251,24 @@ public class ComprobarErrores {
 	public static boolean hayErrorCommunicationLink(String respuesta, String respuestaAlmacenada, long responseCode) {
 		return (respuesta.contains("Communication link failureCommunication link failure"));
 	}
-
+	
+	/**
+	 * Comprueba si la respuesta contiene Trim en valor
+	 * @param respuesta
+	 * @param respuestaAlmacenada
+	 * @param codigoRetorno
+	 * @return true si contiene la cadena
+	 */
+	public static boolean hayErrorTrimValor(String respuesta, String respuestaAlmacenada, long responseCode) {
+		if (respuesta.replaceAll(" ", "").equals(respuestaAlmacenada.replaceAll(" ", ""))) {
+			try {
+				return (respuesta.contains("TRIM EN VALOR"));
+			} catch (Exception e) {
+				System.out.println(e);
+			}
+		}
+		return false;
+	
+	}
 }
+		

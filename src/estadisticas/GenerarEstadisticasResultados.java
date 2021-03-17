@@ -334,7 +334,7 @@ public class GenerarEstadisticasResultados {
 				return "Bloquea prueba por error QIX;26373";
 			}
 
-			if (respuesta.replaceAll(" ", "").equals(respuestaAlmacenada.replaceAll(" ", ""))) {
+			if (ComprobarErrores.hayErrorTrimValor(respuesta, respuestaAlmacenada, responseCode)) {
 				return "TRIM EN VALOR[25497];25497";
 			}
 
