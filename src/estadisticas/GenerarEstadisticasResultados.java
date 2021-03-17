@@ -566,7 +566,6 @@ public class GenerarEstadisticasResultados {
 				System.out.println(c);
 			}
 		}
-		return sfRespuesta;
 	}
 
 	
