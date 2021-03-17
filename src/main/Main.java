@@ -13,6 +13,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import estadisticas.BorrarDirectorio;
 import estadisticas.Comprimir;
 import estadisticas.GenerarEstadisticasResultados;
+import estadisticas.GenerarEstadisticasTiempos;
 import estadisticas.GrabarFichero;
 
 public class Main {
@@ -47,9 +48,10 @@ public class Main {
 //    static String NOMBRE_FICHERO_ENTRADA_2_5 = "host6.json";
     /** * * * * * * * * * * * * * * * * * * * * * * * * * * */
     /** - - - - - MODIFICAR SOLO ESTO - - - - -*/
-	static int numFasesCrear = 4;//Si se quiere ejecutar solo una fase cambiar tambien donde pone carpeta con el mismo numero (L67)
+	static int numFasesCrear = 12;//Si se quiere ejecutar solo una fase cambiar tambien donde pone carpeta con el mismo numero (L67)
 	static String tipoResultado = "Db2"; //poner SQL o Db2;
 	static boolean comprimirYEliminar = false;
+	static String tipo = "tiempos";//tiempos o resultados
 	/**  - - - FIN MODIFICAR SOLO ESTO - - - - -  */
     /** * * * * * * * * * * * * * * * * * * * * * * * * * * */
 	
@@ -59,20 +61,34 @@ public class Main {
         String NOMBRE_FICHERO_SALIDA_FILTRADO = "ResultadoFiltrado_" + mdy +"_" +tipoResultado+ ".csv";
         String FICHERO_LLAMADAS_CON_ERROR = "llamadas_con_error" + mdy +"_" +tipoResultado+ ".txt";
 
-        GenerarEstadisticasResultados estadisticas = new GenerarEstadisticasResultados();
+        GenerarEstadisticasResultados resultados = new GenerarEstadisticasResultados();
+        GenerarEstadisticasTiempos estadisticas = new GenerarEstadisticasTiempos();
+
         GrabarFichero grabarFichero = new GrabarFichero();
         grabarFichero.crearFichero("salida/" + NOMBRE_FICHERO_SALIDA_FILTRADO, true);
 
 
-        for(int fase = 0, carpeta = 1; carpeta <= numFasesCrear; fase++,carpeta++) {
+        for(int fase = 0, carpeta = 12; carpeta <= numFasesCrear; fase++,carpeta++) {
+        	
         	String nombreCarpetaFase ="F"+carpeta+"resultados"+tipoResultado; 
         	File files[] = (new File(nombreCarpetaFase+"/")).listFiles(filtro);
-        	for (int i = 0; i < files.length; i++) {
-        		//System.out.println(files[i].getName());
-				StringBuffer sF0 = estadisticas.obtenerSalidaNewMan(
-						nombreCarpetaFase+"/"+files[i].getName(), i == 0 && fase == 0, FICHERO_LLAMADAS_CON_ERROR);
-                grabarFichero.agregarAFichero(sF0.toString());
-			}
+        	if(tipo.equals("resultados")) {
+	        	for (int i = 0; i < files.length; i++) {
+	        		//System.out.println(files[i].getName());
+					StringBuffer sF0 = resultados.obtenerSalidaNewMan(
+							nombreCarpetaFase+"/"+files[i].getName(), i == 0 && fase == 0, FICHERO_LLAMADAS_CON_ERROR);
+	                grabarFichero.agregarAFichero(sF0.toString());
+				}
+        	} else if(tipo.equals("tiempos")) {
+        		for (int i = 0; i < files.length; i++) {
+	        		//System.out.println(files[i].getName());
+					StringBuffer sF0 = estadisticas.obtenerSalidaNewMan(
+							"F"+carpeta+"resultadosDb2"+"/"+files[i].getName(),
+							"F"+carpeta+"resultadosSQL"+"/"+files[i].getName(), 
+							i == 0 && fase == 0);
+	                grabarFichero.agregarAFichero(sF0.toString());
+				}
+        	}
         	//Comprimir y eliminar
 			if (comprimirYEliminar) {
 				if (Comprimir.comprimirCarpeta(nombreCarpetaFase)) {
