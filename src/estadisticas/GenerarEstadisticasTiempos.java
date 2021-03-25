@@ -91,7 +91,7 @@ public class GenerarEstadisticasTiempos {
 			// JSONArray assertions = (JSONArray) item.get("assertions");
 			// System.out.println("nº de assertions:" + executions.size());
 			// Cabeceras
-			String cabecera = "Prueba;Transaccion;status code;tiempo mainfram; tiempo sql server";
+			String cabecera = "Prueba;Transaccion;status code main;status code sql;tiempo mainfram; tiempo sql server; servidor caido";
 			if (generaCabecera) {
 				sfRespuesta.append(cabecera);
 				sfRespuesta.append("\r\n");
@@ -110,11 +110,11 @@ public class GenerarEstadisticasTiempos {
 
 				JSONObject responseMF = (JSONObject) executionMF.get("response");
 				Long tiempoMF = (Long) responseMF.get("responseTime");
-				System.out.println(tiempoMF);
+				//System.out.println(tiempoMF);
 				
-				Long responseCode = 999l;
+				Long responseCodeMF = 999l;
 				try {
-					responseCode = (Long) responseMF.get("code");
+					responseCodeMF = (Long) responseMF.get("code");
 
 				} catch (Exception e) {
 					// e.printStackTrace();
@@ -135,10 +135,25 @@ public class GenerarEstadisticasTiempos {
 
 				JSONObject responseSQL = (JSONObject) executionSQL.get("response");
 				Long tiempoSQL = (Long) responseSQL.get("responseTime");
-				System.out.println(tiempoSQL);
+				JSONObject streamSQL = (JSONObject) responseSQL.get("stream");
+				JSONArray respuestaSQL = (JSONArray) streamSQL.get("data");
+				byte[] abRespuesta = new byte[respuestaSQL.size()];
+ 
+				int cont = 0;
+				for (Object object : respuestaSQL) {
+					long b = (long) object;
+					abRespuesta[cont++] = (byte)b;
+				}
+				boolean servidorCaido = false;
+				String respuestaSSQL = new String(abRespuesta);
+				if(respuestaSSQL.contains("Internal server error") || respuestaSSQL.contains("Timeout expired")) {
+					servidorCaido = true;
+				}
+				//System.out.println(tiempoSQL);
+				Long responseCodeSQL = 999L;
 				
 				try {
-					responseCode = (Long) responseSQL.get("code");
+					responseCodeSQL = (Long) responseSQL.get("code");
 
 				} catch (Exception e) {
 					// e.printStackTrace();
@@ -147,8 +162,8 @@ public class GenerarEstadisticasTiempos {
 
 				//JSONArray assertions = (JSONArray) executionSQL.get("assertions");
 				
-				// Array con los 4 test
-				String linea = nombreMF + ";" + transaccionMF + ";" + responseCode +";"+ tiempoMF + ";" + tiempoSQL;
+				// Array con tiempos
+				String linea = nombreMF + ";" + transaccionMF + ";" + responseCodeMF + ";" + responseCodeSQL +";"+ tiempoMF + ";" + tiempoSQL +";" +servidorCaido;
 
 				String errorDetectado = "";
 				boolean resultadoGlobal = true;
@@ -161,9 +176,7 @@ public class GenerarEstadisticasTiempos {
 			}
 		}
 
-		catch (
-
-		Exception e) {
+		catch (Exception e) {
 			System.out.println("Error obtenerSalida: " + e);
 			e.printStackTrace();
 		} finally {

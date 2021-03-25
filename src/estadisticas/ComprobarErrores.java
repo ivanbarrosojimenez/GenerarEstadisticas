@@ -249,7 +249,7 @@ public class ComprobarErrores {
 	 * @return true si contiene la cadena
 	 */
 	public static boolean hayErrorCommunicationLink(String respuesta, String respuestaAlmacenada, long responseCode) {
-		return (respuesta.contains("Communication link failureCommunication link failure"));
+		return (respuesta.contains("Communication link failure"));
 	}
 	
 	/**
