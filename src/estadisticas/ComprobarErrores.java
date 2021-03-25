@@ -143,7 +143,7 @@ public class ComprobarErrores {
 	 * @return true si contiene la cadena
 	 */
 	public static boolean hayErrorRlel(String respuesta, String respuestaAlmacenada, long responseCode) {
-		return (respuesta.contains("RLEL"));
+		return (respuestaAlmacenada.contains("RLEL"));
 	}
 	
 	/**
@@ -199,6 +199,7 @@ public class ComprobarErrores {
 	 */
 	public static boolean hayErrorPOSAZ631(String respuesta, String respuestaAlmacenada, long responseCode) {
 		if (respuesta.startsWith("{\"POSAZ631OperationResponse")) {
+			/**Esta parte valida la fecha de modificacion tambien
 			String respuestaSinFechas = respuesta
 					.replace(respuesta.substring(respuesta.indexOf("fec_ult_proceso_s"),
 							respuesta.indexOf("fec_ult_proceso_s") + 39), "")
@@ -213,8 +214,26 @@ public class ComprobarErrores {
 			// System.out.println(respuestaSinFechas);
 			// System.out.println(respuestaAlmacenadaSinFechas);
 			// System.out.println(respuestaSinFechas.equals(respuestaAlmacenadaSinFechas));
-			//
-			return respuestaSinFechas.equals(respuestaAlmacenadaSinFechas);
+			
+	*/
+			//Validar sin tener en cuenta la parte dinamica, la fecha ultimo proceso
+			
+			if(!(respuesta.substring(0, 2461).equals(respuestaAlmacenada.substring(0, 2461)) && 
+					respuesta.substring(2511).equals(respuestaAlmacenada.substring(2511)))) {
+				System.out.println(respuesta.substring(0, 2461));
+				System.out.println(respuestaAlmacenada.substring(0, 2461));
+				System.out.println(respuesta.substring(2511));
+				System.out.println(respuestaAlmacenada.substring(2511));
+				System.out.println(respuesta);
+				System.out.println(respuestaAlmacenada);
+
+				System.out.println();
+			}
+			return(respuesta.substring(0, 2461).equals(respuestaAlmacenada.substring(0, 2461)) && 
+					respuesta.substring(2511).equals(respuestaAlmacenada.substring(2511)));
+			
+//			System.out.println(respuestaSinFechas.equals(respuestaAlmacenadaSinFechas));
+//			return respuestaSinFechas.equals(respuestaAlmacenadaSinFechas);
 		}
 		return false;
 	}

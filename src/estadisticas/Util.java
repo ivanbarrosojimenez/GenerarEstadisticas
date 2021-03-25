@@ -96,7 +96,7 @@ public class Util {
 
 			// Parche para validar la parte dinamica en respuesta del 631
 			if (ComprobarErrores.hayErrorPOSAZ631(respuesta, respuestaAlmacenada, responseCode)) {
-				return "error posaz631 revisar";
+				return "Sin error, parte dinamica en respuesta";
 			}
 
 			if (ComprobarErrores.hayErrorPOSAZ611CaracterCod(respuesta, respuestaAlmacenada, responseCode)) {
@@ -219,7 +219,18 @@ public class Util {
 
 			if (respuestaAlmacenada.contains("Failure interacting with CICS")
 					&& !respuesta.contains("Failure interacting with CICS")) {
-				return "CICS mainframe[27992];27992";
+				if(respuestaAlmacenada.contains("INVALID_ZONED_DEC")) {
+					return "CICS INVALID_ZONED_DEC mainframe vs other[27992];27992";
+				} else if(responseCode == 502) {
+					return "XML 502[27997];27997";
+				} else if(respuesta.contains("OperationResponse") && respuestaAlmacenada.contains("abended 'ASRA'")){
+
+					return "abend ASRA vs error A [27999];27999";
+				} else {
+					System.out.println(respuestaAlmacenada);
+					System.out.println(respuesta.substring(0, 1000));
+					return "Error cics vs other [27992];27992";
+				}
 			}
 
 			// Comprobacion de caracteres raros
@@ -243,7 +254,8 @@ public class Util {
 					return "Error codificacion";
 				}
 
-				// Validar partes dinamicas 503
+				//TODO
+				// Validar partes dinamicas 503 quitar despues de generar las nuevas colecciones
 				if (respuesta.startsWith("{\"POSAZ503OperationResponse")) {
 					if (cleanAlmacenado.replaceAll(" ", "").substring(0, 2292)
 							.equals(clean.replaceAll(" ", "").substring(0, 2292))
