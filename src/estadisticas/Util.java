@@ -219,7 +219,7 @@ public class Util {
 
 			if (respuestaAlmacenada.contains("Failure interacting with CICS")
 					&& !respuesta.contains("Failure interacting with CICS")) {
-				return "CICS mainframe";
+				return "CICS mainframe[27992];27992";
 			}
 
 			// Comprobacion de caracteres raros
@@ -227,7 +227,7 @@ public class Util {
 			try {
 				String cleanAlmacenado = respuestaAlmacenada.replaceAll("\\P{Print}", "");
 				String clean = respuesta.replaceAll("\\P{Print}", "");
-
+			
 //					System.out.println(respuesta);
 //					System.out.println(respuestaAlmacenada);
 				cleanAlmacenado = cleanAlmacenado.replaceAll(" ", "");
@@ -236,6 +236,8 @@ public class Util {
 //					System.err.println(cleanAlmacenado);
 //					System.err.println(clean);
 //					System.out.println(".");
+				
+
 				if (clean.equals(cleanAlmacenado)) {
 					System.out.println("Error codificacion");
 					return "Error codificacion";
@@ -269,6 +271,9 @@ public class Util {
 				// TODO TRATAMIENTO SACAR PATRON
 				return "error respuesta vacia;";
 			} else if (respuestaAlmacenada.contains("\\/")) {
+				System.err.println(respuestaAlmacenada);
+				System.err.println(respuesta);
+
 				return "error backslash simple;25490";
 			}
 
