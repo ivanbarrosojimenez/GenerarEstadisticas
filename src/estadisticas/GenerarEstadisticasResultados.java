@@ -4,12 +4,10 @@ package estadisticas;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -17,6 +15,8 @@ import java.util.TreeSet;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+
+import estadisticas.*;
 
 public class GenerarEstadisticasResultados {
 
@@ -60,8 +60,8 @@ public class GenerarEstadisticasResultados {
 
 				String linea = nombre + ";" + transaccion + ";" + responseCode;
 				String[] partesLlamadas;
-				String respuesta;
-				String respuestaAlmacenada;
+				String respuesta = "";
+				String respuestaAlmacenada = "";
 				String errorDetectado = "";
 				boolean resultadoGlobal = true;
 				while (iteratorK.hasNext()) {
@@ -73,13 +73,13 @@ public class GenerarEstadisticasResultados {
 							partesLlamadas = valor.split("b613ab3bd4de8c5ddf771161c4e27f3a");
 							respuesta = partesLlamadas[1];
 							respuestaAlmacenada = partesLlamadas[2];
-							errorDetectado = Util.obtenerTipoDeError(respuesta, respuestaAlmacenada, responseCode);
+							errorDetectado = Util.obtenerTipoDeError(respuesta, respuestaAlmacenada, responseCode)+";";
 							if (errorDetectado.startsWith("Sin error")) {
 								clave = true;
 								errorDetectado = "";
 							}
 						} catch (Exception e) {
-
+							System.out.println("error " + e);	
 						}
 					}
 					resultadoGlobal = resultadoGlobal && clave;
@@ -88,6 +88,7 @@ public class GenerarEstadisticasResultados {
 				}
 
 				linea += ";" + resultadoGlobal + ";" + errorDetectado;
+				
 				errorDetectado = "";
 
 				// System.out.println(linea);
@@ -123,7 +124,7 @@ public class GenerarEstadisticasResultados {
 			// JSONArray assertions = (JSONArray) item.get("assertions");
 			// System.out.println("nº de assertions:" + executions.size());
 			// Cabeceras
-			String cabecera = "Prueba;Transaccion;status code;mismo status code;es json;Respuesta==mainframe;mismo tipos error;Resultado global;clasificación error; Id Board";
+			String cabecera = "Prueba;Transaccion;status code;mismo status code;es json;Respuesta==mainframe;mismo tipos error;Resultado global;clasificación error; Id Board;RAINCODE;MAINFRAME";
 			if (generaCabecera) {
 				sfRespuesta.append(cabecera);
 				sfRespuesta.append("\r\n");
@@ -154,8 +155,8 @@ public class GenerarEstadisticasResultados {
 				// Array con los 4 test
 				String linea = nombre + ";" + transaccion + ";" + responseCode;
 				String[] partesLlamadas;
-				String respuesta;
-				String respuestaAlmacenada;
+				String respuesta = "";
+				String respuestaAlmacenada="";
 				String errorDetectado = "";
 				boolean resultadoGlobal = true;
 				boolean resultadoPrueba = true;
@@ -184,7 +185,7 @@ public class GenerarEstadisticasResultados {
 										partesLlamadas = valor.split("b613ab3bd4de8c5ddf771161c4e27f3a");
 										respuesta = partesLlamadas[1];
 										respuestaAlmacenada = partesLlamadas[2];
-										errorDetectado = Util.obtenerTipoDeError(respuesta, respuestaAlmacenada, responseCode);
+										errorDetectado = Util.obtenerTipoDeError(respuesta, respuestaAlmacenada, responseCode)+";";
 										if (errorDetectado.startsWith("Sin error")) {
 											errorDetectado = "";
 											resultadoGlobal = true;
@@ -202,7 +203,11 @@ public class GenerarEstadisticasResultados {
 						linea += ";" + resultadoPrueba;
 					}
 				}
+				
 				linea += ";" + resultadoGlobal + ";" + errorDetectado;
+//				if(!resultadoGlobal) {
+//					linea+=";" + respuesta + ";" + respuestaAlmacenada;
+//				}
 				errorDetectado = "";
 				// CREAR FICHERO CON LOS ERRORES PARA CREAR COLECCIONES
 				if (!resultadoGlobal) {
@@ -252,7 +257,9 @@ public class GenerarEstadisticasResultados {
 			
 			if (ComprobarErrores.hayError503(respuesta, respuestaAlmacenada, responseCode)) {
 				return "error 503 posible pase;";
-			}
+			}	
+			
+
 
 			if (ComprobarErrores.hayErrorOverflow(respuesta, respuestaAlmacenada, responseCode)) {
 				return "OUTPUT_OVERFLOW[25933];25933";
@@ -444,7 +451,7 @@ public class GenerarEstadisticasResultados {
 
 			if (respuestaAlmacenada.contains("Failure interacting with CICS")
 					&& !respuesta.contains("Failure interacting with CICS")) {
-				return "CICS mainframe";
+				return "abend vs error A[27999];27999";
 			}
 
 			// Comprobacion de caracteres raros
@@ -466,26 +473,32 @@ public class GenerarEstadisticasResultados {
 					return "Error codificacion";
 				}
 
-				// Validar partes dinamicas 503
-				if (respuesta.startsWith("{\"POSAZ503OperationResponse")) {
-					if (cleanAlmacenado.replaceAll(" ", "").substring(0, 2292)
-							.equals(clean.replaceAll(" ", "").substring(0, 2292))
-							&& (cleanAlmacenado.replaceAll(" ", "").substring(2300)
-									.equals(clean.replaceAll(" ", "").substring(2300))
-									|| cleanAlmacenado.replaceAll(" ", "").substring(2300)
-											.equals(clean.replaceAll(" ", "").substring(2301)))) {
-						return "error codificación caracteres";
-					}
-				}
+				
 
 			} catch (Exception e) {
 				System.out.println(e);
 				e.printStackTrace();
 			}
 //			}
-
+ 
 			// fin de comprobar caracteres raros
 
+			System.out.println("Antes de validar parte dinamnica 503");
+			// Validar partes dinamicas 503
+			if (respuesta.startsWith("{\"POSAZ503OperationResponse")) {
+				System.out.println(respuestaAlmacenada.substring(0, 2292));
+				System.out.println(respuesta.substring(0, 2292));
+				if (respuestaAlmacenada.substring(0, 2292)
+						.equals(respuesta.substring(0, 2292))
+						&& (respuestaAlmacenada.substring(2300)
+								.equals(respuesta.substring(2300))
+								|| respuestaAlmacenada.substring(2300)
+										.equals(respuesta.substring(2301)))) {
+					return "sin error, parte dinamica (secuencia consulta)";
+				}
+			}
+			
+			
 			if (respuestaAlmacenada.contains("\\//")) {
 				// TODO TRATAMIENTO SACAR PATRON
 
@@ -508,6 +521,10 @@ public class GenerarEstadisticasResultados {
 				if (!respuesta.substring(592, 593).equals(respuestaAlmacenada.substring(592, 593))) {
 					return "num reg. diferente[27526];27526";
 				}
+			}
+			
+			if(ComprobarErrores.hayErrorOccurs528(respuesta, respuestaAlmacenada, responseCode)) {
+				return "datos diferentes occurs[28419];28419";
 			}
 		} catch (Exception e) {
 			System.err.println(e);

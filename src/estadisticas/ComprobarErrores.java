@@ -25,6 +25,17 @@ public class ComprobarErrores {
 	}
 	
 	/**
+	 * Comprueba si la respuesta tiene un codigo 502
+	 * @param respuesta
+	 * @param respuestaAlmacenada
+	 * @param codigoRetorno
+	 * @return true si contiene error 503
+	 */
+	public static boolean hayError502(String respuesta, String respuestaAlmacenada, long responseCode) {
+		return(responseCode == 502);
+	}
+	
+	/**
 	 * Comprueba si la respuesta contiene la cadena OUTPUT_OVERFLOW
 	 * @param respuesta
 	 * @param respuestaAlmacenada
@@ -286,6 +297,78 @@ public class ComprobarErrores {
 				System.out.println(e);
 			}
 		}
+		return false;
+	
+	}
+	
+	/**
+	 * Comprueba si la respuesta contiene cambio en auditusuario
+	 * @param respuesta
+	 * @param respuestaAlmacenada
+	 * @param codigoRetorno
+	 * @return true si contiene la cadena
+	 */
+	public static boolean hayErrorPosaz538(String respuesta, String respuestaAlmacenada, long responseCode) {
+		
+		try {
+			if (respuestaAlmacenada.startsWith("{\"POSAZ538OperationResponse")) {
+				if(respuesta.substring(0, respuesta.indexOf("audit_cod_usuario")).equals(respuestaAlmacenada.substring(0, respuesta.indexOf("audit_cod_usuario")))) {
+					return true;
+				}
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return false;
+	
+	}
+	
+	/**
+	 * Comprueba si la respuesta puede contener un error de diferencia en occurs
+	 * @param respuesta
+	 * @param respuestaAlmacenada
+	 * @param codigoRetorno
+	 * @return true si contiene la cadena
+	 */
+	public static boolean hayErrorOccurs528(String respuesta, String respuestaAlmacenada, long responseCode) {
+		if (respuestaAlmacenada.startsWith("{\"POSAZ528OperationResponse")) {
+			int maxTamanio = respuesta.length();
+			int indiceActual = 0;
+			int indiceFinActual = 0;
+			String cadenaRai = respuesta.replace(" ", "");
+			String cadenaMai = respuestaAlmacenada.replace(" ", "");
+			String cadenaReferencia = cadenaRai;
+			String cadenaReferenciaF = cadenaRai;
+			while(indiceActual < maxTamanio) {
+				System.out.println(cadenaReferencia.length());
+				System.out.println(cadenaReferenciaF.length());
+				indiceActual += cadenaReferencia.indexOf("datos_idiomas");
+				indiceFinActual += cadenaReferenciaF.indexOf("datos_gerentes");
+				try {
+					if(indiceActual == -1) {
+						indiceActual = maxTamanio;
+						return false;
+					}
+					else {
+						System.out.println(cadenaRai.substring(indiceActual, indiceFinActual));
+						System.out.println(cadenaMai.substring(indiceActual, indiceFinActual));
+						System.out.println(cadenaRai);
+						System.out.println(cadenaMai);
+						if(!cadenaRai.substring(indiceActual, indiceFinActual).equals(cadenaMai.substring(indiceActual, indiceFinActual))) {
+							return true;
+						}
+					}
+						
+					cadenaReferencia = cadenaRai.substring(indiceFinActual);
+					cadenaReferenciaF = cadenaRai.substring(indiceFinActual+200);
+
+				} catch (Exception e) {
+					System.out.println("error");
+					return false;
+				}
+				
+			}
+		} 
 		return false;
 	
 	}

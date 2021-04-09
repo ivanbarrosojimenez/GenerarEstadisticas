@@ -25,6 +25,10 @@ public class Util {
 				return "error 504[25935];25935";
 			}
 			
+			if (ComprobarErrores.hayError502(respuesta, respuestaAlmacenada, responseCode)) {
+				return "xml 502[27997];27997;";
+			}
+			
 			if (ComprobarErrores.hayError503(respuesta, respuestaAlmacenada, responseCode)) {
 				return "error 503 posible pase;";
 			}
@@ -68,7 +72,15 @@ public class Util {
 			if (ComprobarErrores.hayError969(respuesta, respuestaAlmacenada, responseCode)) {
 				return "SQL -969[25897];25897";
 			}
+			
+			if (ComprobarErrores.hayErrorPosaz538(respuesta, respuestaAlmacenada, responseCode)) {
+				return "Sin error, diferencia en audit usuario";
+			}
 
+			if(ComprobarErrores.hayErrorOccurs528(respuesta, respuestaAlmacenada, responseCode)) {
+				return "datos diferentes occurs[28419];28419";
+			}
+			
 			// TODO ADAPTAR PARA OTROS ERRORES
 			// Parche para error 593 (llega a en lugar de rgsao593)
 			if (respuesta.replaceAll("\"a\"", "\"rgsao593e\"").equals(respuestaAlmacenada)) {
@@ -118,6 +130,8 @@ public class Util {
 			// if(respuestaAlmacenada.replaceAll("ƒÂ", "?").equals(respuesta)) {
 			// return "error codificación ƒ";
 			// }..
+			
+			
 
 			if (respuesta.contains("") || respuesta.contains("\\u0000") || respuesta.contains("\\u0007")
 					|| respuesta.contains("\\u0017") || respuestaAlmacenada.contains("Â“")) {
@@ -216,6 +230,8 @@ public class Util {
 			} catch (Exception e) {
 				System.err.println(e);
 			}
+			
+				
 
 			if (respuestaAlmacenada.contains("Failure interacting with CICS")
 					&& !respuesta.contains("Failure interacting with CICS")) {
@@ -253,25 +269,61 @@ public class Util {
 					System.out.println("Error codificacion");
 					return "Error codificacion";
 				}
-
-				//TODO
-				// Validar partes dinamicas 503 quitar despues de generar las nuevas colecciones
-				if (respuesta.startsWith("{\"POSAZ503OperationResponse")) {
-					if (cleanAlmacenado.replaceAll(" ", "").substring(0, 2292)
-							.equals(clean.replaceAll(" ", "").substring(0, 2292))
-							&& (cleanAlmacenado.replaceAll(" ", "").substring(2300)
-									.equals(clean.replaceAll(" ", "").substring(2300))
-									|| cleanAlmacenado.replaceAll(" ", "").substring(2300)
-											.equals(clean.replaceAll(" ", "").substring(2301)))) {
-						return "error codificación caracteres";
-					}
-				}
-
 			} catch (Exception e) {
 				System.out.println(e);
 				e.printStackTrace();
 			}
 //			}
+			
+			
+			
+			// Validar partes dinamicas 503
+			if (respuesta.startsWith("{\"POSAZ503OperationResponse")) {
+				if (respuestaAlmacenada.substring(0, 2292)
+						.equals(respuesta.substring(0, 2292))
+						&& (respuestaAlmacenada.substring(2300)
+								.equals(respuesta.substring(2300))
+								|| respuestaAlmacenada.substring(2300)
+										.equals(respuesta.substring(2301)))) {
+					return "sin error, parte dinamica (secuencia consulta)";
+				}
+				System.out.println(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("nombre_via_e")));
+				System.out.println(respuestaAlmacenada.substring(2300));
+				if(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("nombre_via_e")).equals(respuesta.substring(0, respuesta.indexOf("nombre_via_e")))) {
+					System.out.println("La primera parte es igual");
+					if(respuestaAlmacenada.substring(respuestaAlmacenada.indexOf("numero_e"), respuestaAlmacenada.indexOf("cod_consulta_s"))
+								.equals((respuesta.substring(respuesta.indexOf("numero_e"), respuesta.indexOf("cod_consulta_s"))))) {
+						System.out.println("Segunda parte con variable pero igual");
+						if(respuestaAlmacenada.substring(respuestaAlmacenada.indexOf("rgsao503_errores"))
+								.equals((respuesta.substring(respuesta.indexOf("rgsao503_errores"))))) {
+							return "Error codificacion[28496];28496";
+							
+						}
+					}
+				} else if (respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("vacaciones_e"))
+						.equals(respuesta.substring(0, respuesta.indexOf("vacaciones_e")))) {
+					System.out.println("La primera parte es igual");
+					if (respuestaAlmacenada
+							.substring(respuestaAlmacenada.indexOf("observaciones_e"),
+									respuestaAlmacenada.indexOf("nombre_via_e"))
+							.equals((respuesta.substring(respuesta.indexOf("observaciones_e"),
+									respuesta.indexOf("cod_consulta_s"))))) {
+						if (respuestaAlmacenada
+								.substring(respuestaAlmacenada.indexOf("numero_e"),
+										respuestaAlmacenada.indexOf("cod_consulta_s"))
+								.equals((respuesta.substring(respuesta.indexOf("numero_e"),
+										respuesta.indexOf("cod_consulta_s"))))) {
+							System.out.println("Segunda parte con variable pero igual");
+							if (respuestaAlmacenada.substring(respuestaAlmacenada.indexOf("rgsao503_errores"))
+									.equals((respuesta.substring(respuesta.indexOf("rgsao503_errores"))))) {
+								return "Error codificacion[28496];28496";
+
+							}
+						}
+					}
+				}
+			}
+			
 
 			// fin de comprobar caracteres raros
 
