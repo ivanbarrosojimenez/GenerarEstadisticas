@@ -372,5 +372,49 @@ public class ComprobarErrores {
 		return false;
 	
 	}
+	
+	/**
+	 * Comprueba si la respuesta contiene cambio en auditusuario
+	 * @param respuesta
+	 * @param respuestaAlmacenada
+	 * @param codigoRetorno
+	 * @return true si contiene la cadena
+	 */
+	public static boolean hayErrorCodif(String respuesta, String respuestaAlmacenada, long responseCode) {
+		
+		try {
+			if (respuestaAlmacenada.startsWith("{\"POSMZ135OperationResponse")) {
+				if(respuesta.substring(0, respuesta.indexOf("nif_prof_e")).equals(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("nif_prof_e")))
+						&& respuesta.substring(respuesta.indexOf("cod_delegacion_e"), respuesta.length())
+							.equals(respuestaAlmacenada.substring(respuestaAlmacenada.indexOf("cod_delegacion_e"), respuestaAlmacenada.length()))) {
+					return true;
+				}
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return false;	
+	}
+	
+	/**
+	 * Comprueba si la respuesta contiene cambio en auditusuario
+	 * @param respuesta
+	 * @param respuestaAlmacenada
+	 * @param codigoRetorno
+	 * @return true si contiene la cadena
+	 */
+	public static boolean hayErrorCambiarColeccion(String respuesta, String respuestaAlmacenada, long responseCode) {
+		
+		try {
+			if (respuestaAlmacenada.startsWith("{\"POSAZ626OperationResponse")) {
+				if(respuesta.substring(0, respuesta.indexOf("num_reg_totales_s")).equals(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("num_reg_totales_s")))) {
+					return true;
+				}
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return false;	
+	}
 }
 		

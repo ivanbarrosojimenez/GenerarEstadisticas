@@ -206,8 +206,8 @@ public class GenerarEstadisticasResultados {
 				
 				linea += ";" + resultadoGlobal + ";" + errorDetectado;
 //				if(!resultadoGlobal) {
-//					linea+=";" + respuesta + ";" + respuestaAlmacenada;
-//				}
+					//linea+=";" + respuesta + ";" + respuestaAlmacenada;
+			//	}
 				errorDetectado = "";
 				// CREAR FICHERO CON LOS ERRORES PARA CREAR COLECCIONES
 				if (!resultadoGlobal) {
@@ -245,7 +245,7 @@ public class GenerarEstadisticasResultados {
 	 * @param responseCode
 	 * @return tipo de error localizado
 	 */
-	private String obtenerTipoDeError(String respuesta, String respuestaAlmacenada, Long responseCode) {
+	private String obtenerTipoDeErrorNOUSAR(String respuesta, String respuestaAlmacenada, Long responseCode) {
 		try {
 			// AL INICIO SE DEBEN PONER LOS ERRORES NO SOLUCIONADOS PARA OBTENER MEJOR
 			// RENDIMIENTO.

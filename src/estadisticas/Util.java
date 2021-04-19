@@ -32,6 +32,14 @@ public class Util {
 			if (ComprobarErrores.hayError503(respuesta, respuestaAlmacenada, responseCode)) {
 				return "error 503 posible pase;";
 			}
+			
+			if (ComprobarErrores.hayErrorCodif(respuesta, respuestaAlmacenada, responseCode)) {
+				return "Error codificacion[28496];28496";
+			}
+			
+			if (ComprobarErrores.hayErrorCambiarColeccion(respuesta, respuestaAlmacenada, responseCode)) {
+				return "Error Cambiar Coleccion[Distinto Orden]";
+			}
 
 			if (ComprobarErrores.hayErrorOverflow(respuesta, respuestaAlmacenada, responseCode)) {
 				return "OUTPUT_OVERFLOW[25933];25933";
@@ -112,7 +120,7 @@ public class Util {
 			}
 
 			if (ComprobarErrores.hayErrorPOSAZ611CaracterCod(respuesta, respuestaAlmacenada, responseCode)) {
-				return "Error caracter codificación[26963];26963";
+				return "Error caracter codificación retorno[26963];26963";
 			}
 
 			if (ComprobarErrores.hayErrorCommunicationLink(respuesta, respuestaAlmacenada, responseCode)) {
@@ -360,6 +368,11 @@ public class Util {
 
 		// System.err.println(respuesta);
 		// System.err.println(respuestaAlmacenada);
+		
+		if (respuestaAlmacenada.startsWith("{\"POSAZ586OperationResponse")) {
+			System.err.println(respuesta);
+			System.err.println(respuestaAlmacenada);
+		}
 
 		return "Error sin detectar";
 		// TODO PARCHE FECHA PROCESO PARA 631 fec_ult_proceso_s
