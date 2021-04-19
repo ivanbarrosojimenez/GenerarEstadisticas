@@ -48,7 +48,7 @@ public class Main {
 //    static String NOMBRE_FICHERO_ENTRADA_2_5 = "host6.json";
     /** * * * * * * * * * * * * * * * * * * * * * * * * * * */
     /** - - - - - MODIFICAR SOLO ESTO - - - - -*/
-	static int numFasesCrear = 4;//Si se quiere ejecutar solo una fase cambiar tambien donde pone carpeta con el mismo numero (L67)
+	static int numFasesCrear = 6;//Si se quiere ejecutar solo una fase cambiar tambien donde pone carpeta con el mismo numero (L67)
 	static String tipoResultado = "Db2"; //poner SQL o Db2;
 	static boolean comprimirYEliminar = false;
 	static String tipo = "resultados";//tiempos o resultados
@@ -72,6 +72,7 @@ public class Main {
         	
         	String nombreCarpetaFase ="F"+carpeta+"resultados"+tipoResultado; 
         	File files[] = (new File(nombreCarpetaFase+"/")).listFiles(filtro);
+        	if(files != null) 
         	if(tipo.equals("resultados")) {
 	        	for (int i = 0; i < files.length; i++) {
 	        		//System.out.println(files[i].getName());

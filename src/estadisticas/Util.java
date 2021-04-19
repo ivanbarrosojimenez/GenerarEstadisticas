@@ -25,6 +25,10 @@ public class Util {
 				return "error 504[25935];25935";
 			}
 			
+			if (ComprobarErrores.hayError305(respuesta, respuestaAlmacenada, responseCode)) {
+				return "error -305[28665];28665";
+			}
+			
 			if (ComprobarErrores.hayError502(respuesta, respuestaAlmacenada, responseCode)) {
 				return "xml 502[27997];27997;";
 			}

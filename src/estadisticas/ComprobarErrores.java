@@ -147,6 +147,18 @@ public class ComprobarErrores {
 	}
 	
 	/**
+	 * Comprueba si la respuesta contiene la cadena  -305
+	 * @param respuesta
+	 * @param respuestaAlmacenada
+	 * @param codigoRetorno
+	 * @return true si contiene la cadena
+	 */
+	public static boolean hayError305(String respuesta, String respuestaAlmacenada, long responseCode) {
+		return (respuesta.contains(" -305"));
+	}
+	
+	
+	/**
 	 * Comprueba si la respuesta contiene la cadena  RLEL
 	 * @param respuesta
 	 * @param respuestaAlmacenada
