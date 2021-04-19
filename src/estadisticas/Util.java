@@ -25,6 +25,10 @@ public class Util {
 				return "error 504[25935];25935";
 			}
 			
+			if (ComprobarErrores.hayError500(respuesta, respuestaAlmacenada, responseCode)) {
+				return "error 500 rep. pru. main[XXXXX];XXXXX";
+			}
+			
 			if (ComprobarErrores.hayError305(respuesta, respuestaAlmacenada, responseCode)) {
 				return "error -305[28665];28665";
 			}
@@ -339,19 +343,19 @@ public class Util {
 
 			// fin de comprobar caracteres raros
 
-			if (respuestaAlmacenada.contains("\\//")) {
-				// TODO TRATAMIENTO SACAR PATRON
-
-				return "error backslash doble;25490";
-			} else if (respuesta.equals("undefined")) {
-				// TODO TRATAMIENTO SACAR PATRON
-				return "error respuesta vacia;";
-			} else if (respuestaAlmacenada.contains("\\/")) {
-				System.err.println(respuestaAlmacenada);
-				System.err.println(respuesta);
-
-				return "error backslash simple;25490";
-			}
+//			if (respuestaAlmacenada.contains("\\//")) {
+//				// TODO TRATAMIENTO SACAR PATRON
+//
+//				return "error backslash doble;25490";
+//			} else if (respuesta.equals("undefined")) {
+//				// TODO TRATAMIENTO SACAR PATRON
+//				return "error respuesta vacia;";
+//			} else if (respuestaAlmacenada.contains("\\/")) {
+//				System.err.println(respuestaAlmacenada);
+//				System.err.println(respuesta);
+//
+//				return "error backslash simple;25490";
+//			}
 
 //			if (respuesta.length() > 356 && respuestaAlmacenada.length() > 356) {
 //				if (respuesta.substring(0, 357).equals(respuestaAlmacenada.substring(0, 357))) {
@@ -364,6 +368,10 @@ public class Util {
 				if (!respuesta.substring(592, 593).equals(respuestaAlmacenada.substring(592, 593))) {
 					return "num reg. diferente[27526];27526";
 				}
+			}
+			
+			if (ComprobarErrores.hayError180(respuesta, respuestaAlmacenada, responseCode)) {
+				return "error 180[XXXXX];XXXXX";
 			}
 		} catch (Exception e) {
 			System.err.println(e);

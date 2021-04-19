@@ -14,6 +14,28 @@ public class ComprobarErrores {
 	}
 	
 	/**
+	 * Comprueba si la respuesta almacenada tiene un codigo 500
+	 * @param respuesta
+	 * @param respuestaAlmacenada
+	 * @param codigoRetorno
+	 * @return true si contiene error 504
+	 */
+	public static boolean hayError500(String respuesta, String respuestaAlmacenada, long responseCode) {
+		return(responseCode == 500);
+	}
+	
+	/**
+	 * Comprueba si la respuesta tiene un codigo 180 en la respuesta
+	 * @param respuesta
+	 * @param respuestaAlmacenada
+	 * @param codigoRetorno
+	 * @return true si contiene error 504
+	 */
+	public static boolean hayError180(String respuesta, String respuestaAlmacenada, long responseCode) {
+		return(respuesta.contains(" -180") && !respuestaAlmacenada.contains(" -180"));
+	}
+	
+	/**
 	 * Comprueba si la respuesta tiene un codigo 503
 	 * @param respuesta
 	 * @param respuestaAlmacenada
