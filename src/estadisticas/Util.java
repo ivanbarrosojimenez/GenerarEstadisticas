@@ -41,6 +41,10 @@ public class Util {
 				return "Error codificacion[28496];28496";
 			}
 			
+			if (ComprobarErrores.hayErrorCodRedPrestacional(respuesta, respuestaAlmacenada, responseCode)) {
+				return "Error CodRedPrestacional";
+			}
+			
 			if (ComprobarErrores.hayErrorCambiarColeccion(respuesta, respuestaAlmacenada, responseCode)) {
 				return "Error Cambiar Coleccion[Distinto Orden]";
 			}
@@ -374,8 +378,8 @@ public class Util {
 		// System.err.println(respuestaAlmacenada);
 		
 		if (respuestaAlmacenada.startsWith("{\"POSAZ586OperationResponse")) {
-			System.err.println(respuesta);
-			System.err.println(respuestaAlmacenada);
+			//System.err.println(respuesta);
+			//System.err.println(respuestaAlmacenada);
 		}
 
 		return "Error sin detectar";

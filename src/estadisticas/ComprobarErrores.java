@@ -428,5 +428,37 @@ public class ComprobarErrores {
 		}
 		return false;	
 	}
+	
+	/**
+	 * Comprueba si la respuesta contiene cambio en auditusuario
+	 * @param respuesta
+	 * @param respuestaAlmacenada
+	 * @param codigoRetorno
+	 * @return true si contiene la cadena
+	 */
+	public static boolean hayErrorCodRedPrestacional(String respuesta, String respuestaAlmacenada, long responseCode) {
+		int indexCodResp, indexCodRespAl;
+		String strCodResp, strCodRespAl;
+		try {
+			if (respuestaAlmacenada.startsWith("{\"POSAZ586OperationResponse")) {
+				if(respuesta.substring(0, respuesta.indexOf("lista_clientes")).equals(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("lista_clientes")))) {
+					while(respuesta.indexOf("cod_red_prestacional_s") != -1 && respuestaAlmacenada.indexOf("cod_red_prestacional_s") != -1) {
+						indexCodResp = respuesta.indexOf("cod_red_prestacional_s");
+						strCodResp = respuesta.substring(indexCodResp - 1, indexCodResp + 25);
+						
+						indexCodRespAl = respuestaAlmacenada.indexOf("cod_red_prestacional_s");
+						strCodRespAl = respuestaAlmacenada.substring(indexCodRespAl, indexCodRespAl + 25);
+						
+						if (!strCodResp.equals(strCodRespAl)) {
+							return true;
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return false;	
+	}
 }
 		
