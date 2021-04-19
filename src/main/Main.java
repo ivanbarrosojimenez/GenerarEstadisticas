@@ -72,6 +72,7 @@ public class Main {
         	
         	String nombreCarpetaFase ="F"+carpeta+"resultados"+tipoResultado; 
         	File files[] = (new File(nombreCarpetaFase+"/")).listFiles(filtro);
+        	if(files != null) 
         	if(tipo.equals("resultados")) {
 	        	for (int i = 0; i < files.length; i++) {
 	        		//System.out.println(files[i].getName());
