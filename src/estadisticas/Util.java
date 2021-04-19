@@ -33,6 +33,14 @@ public class Util {
 				return "error -305[28665];28665";
 			}
 			
+			if (ComprobarErrores.hayError206(respuesta, respuestaAlmacenada, responseCode)) {
+				return "error -206 respuesta D vs respuesta B";
+			}
+			
+			if (ComprobarErrores.hayError911(respuesta, respuestaAlmacenada, responseCode)) {
+				return "error -911 bloqueo de tablas";
+			}
+			
 			if (ComprobarErrores.hayError502(respuesta, respuestaAlmacenada, responseCode)) {
 				return "xml 502[27997];27997;";
 			}
@@ -385,7 +393,7 @@ public class Util {
 		// System.err.println(respuesta);
 		// System.err.println(respuestaAlmacenada);
 		
-		if (respuestaAlmacenada.startsWith("{\"POSAZ586OperationResponse")) {
+		if (respuestaAlmacenada.startsWith("{\"POSAZ538OperationResponse")) {
 			//System.err.println(respuesta);
 			//System.err.println(respuestaAlmacenada);
 		}

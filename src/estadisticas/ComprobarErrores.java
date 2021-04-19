@@ -179,6 +179,27 @@ public class ComprobarErrores {
 		return (respuesta.contains(" -305"));
 	}
 	
+	/**
+	 * Comprueba si la respuesta contiene la cadena  -206
+	 * @param respuesta
+	 * @param respuestaAlmacenada
+	 * @param codigoRetorno
+	 * @return true si contiene la cadena
+	 */
+	public static boolean hayError206(String respuesta, String respuestaAlmacenada, long responseCode) {
+		return (respuestaAlmacenada.contains(" -206"));
+	}
+	
+	/**
+	 * Comprueba si la respuesta contiene la cadena  -911
+	 * @param respuesta
+	 * @param respuestaAlmacenada
+	 * @param codigoRetorno
+	 * @return true si contiene la cadena
+	 */
+	public static boolean hayError911(String respuesta, String respuestaAlmacenada, long responseCode) {
+		return (respuestaAlmacenada.contains(" -911"));
+	}
 	
 	/**
 	 * Comprueba si la respuesta contiene la cadena  RLEL
@@ -424,6 +445,18 @@ public class ComprobarErrores {
 					return true;
 				}
 			}
+			else if (respuestaAlmacenada.startsWith("{\"POSAZ565OperationResponse")) {
+				if(respuesta.substring(0, respuesta.indexOf("lista_especialidades")).equals(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("lista_especialidades")))) {
+					return true;
+				}
+			}
+			else if (respuestaAlmacenada.startsWith("{\"POSAZ558OperationResponse")) {
+				if(respuesta.substring(0, respuesta.indexOf("des_servicio_e")).equals(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("des_servicio_e")))
+						&& respuesta.substring(respuesta.indexOf("ind_activo_e"), respuesta.length())
+							.equals(respuestaAlmacenada.substring(respuestaAlmacenada.indexOf("ind_activo_e"), respuestaAlmacenada.length()))) {
+					return true;
+				}
+			}
 		} catch (Exception e) {
 			System.out.println(e);
 		}
@@ -442,6 +475,32 @@ public class ComprobarErrores {
 		try {
 			if (respuestaAlmacenada.startsWith("{\"POSAZ626OperationResponse")) {
 				if(respuesta.substring(0, respuesta.indexOf("num_reg_totales_s")).equals(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("num_reg_totales_s")))) {
+					return true;
+				}
+			}
+			else if (respuestaAlmacenada.startsWith("{\"POSAZ582OperationResponse")) {
+				if(respuesta.substring(0, respuesta.indexOf("cod_operacion_e")).equals(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("cod_operacion_e")))
+						&& respuesta.substring(respuesta.indexOf("des_tipo_infra_e"), respuesta.length())
+						.equals(respuestaAlmacenada.substring(respuestaAlmacenada.indexOf("des_tipo_infra_e"), respuestaAlmacenada.length()))) {
+					return true;
+				}
+			}
+			else if (respuestaAlmacenada.startsWith("{\"POSAZ574OperationResponse")) {
+				if(respuesta.substring(0, respuesta.indexOf("lista_catalogos")).equals(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("lista_catalogos")))) {
+					return true;
+				}
+			}
+			else if (respuestaAlmacenada.startsWith("{\"POSAZ558OperationResponse")) {
+				if(respuesta.substring(0, respuesta.indexOf("cod_operacion_e")).equals(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("cod_operacion_e")))
+						&& respuesta.substring(respuesta.indexOf("des_servicio_e"), respuesta.length())
+						.equals(respuestaAlmacenada.substring(respuestaAlmacenada.indexOf("des_servicio_e"), respuestaAlmacenada.length()))) {
+					return true;
+				}
+			}
+			else if (respuestaAlmacenada.startsWith("{\"POSAZ538OperationResponse")) {
+				if(respuesta.substring(0, respuesta.indexOf("audit_fec_modificacion")).equals(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("audit_fec_modificacion")))
+						&& respuesta.substring(respuesta.indexOf("audit_cod_usuario"), respuesta.length())
+						.equals(respuestaAlmacenada.substring(respuestaAlmacenada.indexOf("audit_cod_usuario"), respuestaAlmacenada.length()))) {
 					return true;
 				}
 			}
