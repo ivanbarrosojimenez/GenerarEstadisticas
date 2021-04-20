@@ -397,7 +397,7 @@ public class Util {
 		// System.err.println(respuesta);
 		// System.err.println(respuestaAlmacenada);
 		
-		if (respuestaAlmacenada.startsWith("{\"POSAZ533OperationResponse")) {
+		if (respuestaAlmacenada.startsWith("{\"POSAZ515OperationResponse")) {
 			//System.err.println(respuesta);
 			//System.err.println(respuestaAlmacenada);
 		}

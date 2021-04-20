@@ -447,6 +447,8 @@ public class ComprobarErrores {
 	 * @return true si contiene la cadena
 	 */
 	public static boolean hayErrorCodif(String respuesta, String respuestaAlmacenada, long responseCode) {
+		int indexResp, indexRespAl;
+		String strResp, strRespAl;
 		
 		try {
 			if (respuestaAlmacenada.startsWith("{\"POSMZ135OperationResponse")) {
@@ -475,6 +477,40 @@ public class ComprobarErrores {
 					return true;
 				}
 			}
+			else if (respuestaAlmacenada.startsWith("{\"POSAZ516OperationResponse")) {
+				if(respuesta.substring(0, respuesta.indexOf("desc_subespecialidad_e")).equals(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("desc_subespecialidad_e")))
+						&& respuesta.substring(respuesta.indexOf("tipo_subespecialidad_e"), respuesta.length())
+							.equals(respuestaAlmacenada.substring(respuestaAlmacenada.indexOf("tipo_subespecialidad_e"), respuestaAlmacenada.length()))) {
+					return true;
+				}
+			}
+			else if (respuestaAlmacenada.startsWith("{\"POSAZ515OperationResponse")) {
+				if(respuesta.substring(0, respuesta.indexOf("lista_subespec")).equals(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("lista_subespec")))) {
+					while(respuesta.indexOf("des_subespecialidad_s") != -1 && respuestaAlmacenada.indexOf("des_subespecialidad_s") != -1) {
+						indexResp = respuesta.indexOf("des_subespecialidad_s");
+						strResp = respuesta.substring(indexResp - 1, respuesta.indexOf("tipo_subespecialidad_s"));
+						
+						indexRespAl = respuestaAlmacenada.indexOf("des_subespecialidad_s");
+						strRespAl = respuestaAlmacenada.substring(indexRespAl - 1, respuesta.indexOf("tipo_subespecialidad_s"));
+						
+						if (!strResp.equals(strRespAl)) {
+							return true;
+						} else {
+							respuesta = respuesta.replaceFirst("des_subespecialidad_s", "");
+							respuesta = respuesta.replaceFirst("tipo_subespecialidad_s", "");
+							respuestaAlmacenada = respuestaAlmacenada.replaceFirst("des_subespecialidad_s", "");
+							respuestaAlmacenada = respuestaAlmacenada.replaceFirst("tipo_subespecialidad_s", "");
+						}						
+					}
+				}
+			}
+			else if (respuestaAlmacenada.startsWith("{\"POSAZ514OperationResponse")) {
+				if(respuesta.substring(0, respuesta.indexOf("descripcion_e")).equals(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("descripcion_e")))
+						&& respuesta.substring(respuesta.indexOf("rgsao514_errores"), respuesta.length())
+							.equals(respuestaAlmacenada.substring(respuestaAlmacenada.indexOf("rgsao514_errores"), respuestaAlmacenada.length()))) {
+					return true;
+				}
+			}
 		} catch (Exception e) {
 			System.out.println(e);
 		}
@@ -489,6 +525,8 @@ public class ComprobarErrores {
 	 * @return true si contiene la cadena
 	 */
 	public static boolean hayErrorCambiarColeccion(String respuesta, String respuestaAlmacenada, long responseCode) {
+		int indexResp, indexRespAl;
+		String strResp, strRespAl;
 		
 		try {
 			if (respuestaAlmacenada.startsWith("{\"POSAZ626OperationResponse")) {
@@ -529,6 +567,43 @@ public class ComprobarErrores {
 					return true;
 				}
 			}
+			else if (respuestaAlmacenada.startsWith("{\"POSAZ518OperationResponse")) {
+				if(respuesta.substring(0, respuesta.indexOf("lista_redes")).equals(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("lista_redes")))) {
+					return true;
+				}
+			}
+			else if (respuestaAlmacenada.startsWith("{\"POSAZ516OperationResponse")) {
+				if(respuesta.substring(0, respuesta.indexOf("cod_subespecialidad_e")).equals(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("cod_subespecialidad_e")))
+						&& respuesta.substring(respuesta.indexOf("desc_subespecialidad_e"), respuesta.length())
+						.equals(respuestaAlmacenada.substring(respuestaAlmacenada.indexOf("desc_subespecialidad_e"), respuestaAlmacenada.length()))) {
+					return true;
+				}
+			}
+			else if (respuestaAlmacenada.startsWith("{\"POSAZ515OperationResponse")) {
+				if(respuesta.substring(0, respuesta.indexOf("lista_subespec")).equals(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("lista_subespec")))) {
+					while(respuesta.indexOf("fecha_modificacion_s") != -1 && respuestaAlmacenada.indexOf("fecha_modificacion_s") != -1) {
+						indexResp = respuesta.indexOf("fecha_modificacion_s");
+						strResp = respuesta.substring(indexResp - 1, indexResp + 35);
+						
+						indexRespAl = respuestaAlmacenada.indexOf("fecha_modificacion_s");
+						strRespAl = respuestaAlmacenada.substring(indexRespAl - 1, indexRespAl + 35);
+						
+						if (!strResp.equals(strRespAl)) {
+							return true;
+						} else {
+							respuesta = respuesta.replaceFirst("fecha_modificacion_s", "");
+							respuestaAlmacenada = respuestaAlmacenada.replaceFirst("fecha_modificacion_s", "");
+						}						
+					}
+				}
+			}
+			else if (respuestaAlmacenada.startsWith("{\"POSAZ514OperationResponse")) {
+				if(respuesta.substring(0, respuesta.indexOf("id_grupo_empresarial_e")).equals(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("id_grupo_empresarial_e")))
+						&& respuesta.substring(respuesta.indexOf("descripcion_e"), respuesta.length())
+						.equals(respuestaAlmacenada.substring(respuestaAlmacenada.indexOf("descripcion_e"), respuestaAlmacenada.length()))) {
+					return true;
+				}
+			}
 		} catch (Exception e) {
 			System.out.println(e);
 		}
@@ -553,10 +628,13 @@ public class ComprobarErrores {
 						strCodResp = respuesta.substring(indexCodResp - 1, indexCodResp + 25);
 						
 						indexCodRespAl = respuestaAlmacenada.indexOf("cod_red_prestacional_s");
-						strCodRespAl = respuestaAlmacenada.substring(indexCodRespAl, indexCodRespAl + 25);
+						strCodRespAl = respuestaAlmacenada.substring(indexCodRespAl - 1, indexCodRespAl + 25);
 						
 						if (!strCodResp.equals(strCodRespAl)) {
 							return true;
+						} else {
+							respuesta = respuesta.replaceFirst("cod_red_prestacional_s", "");
+							respuestaAlmacenada = respuestaAlmacenada.replaceFirst("cod_red_prestacional_s", "");
 						}
 					}
 				}
