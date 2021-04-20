@@ -101,6 +101,10 @@ public class Util {
 				return "SQL -969[25897];25897";
 			}
 			
+			if (ComprobarErrores.hayError902(respuesta, respuestaAlmacenada, responseCode)) {
+				return "SQL -902[25897];25897";
+			}
+			
 			if (ComprobarErrores.hayErrorPosaz538(respuesta, respuestaAlmacenada, responseCode)) {
 				return "Sin error, diferencia en audit usuario";
 			}
@@ -393,7 +397,7 @@ public class Util {
 		// System.err.println(respuesta);
 		// System.err.println(respuestaAlmacenada);
 		
-		if (respuestaAlmacenada.startsWith("{\"POSAZ538OperationResponse")) {
+		if (respuestaAlmacenada.startsWith("{\"POSAZ533OperationResponse")) {
 			//System.err.println(respuesta);
 			//System.err.println(respuestaAlmacenada);
 		}

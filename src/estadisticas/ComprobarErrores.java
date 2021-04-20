@@ -169,6 +169,17 @@ public class ComprobarErrores {
 	}
 	
 	/**
+	 * Comprueba si la respuesta contiene la cadena  -902
+	 * @param respuesta
+	 * @param respuestaAlmacenada
+	 * @param codigoRetorno
+	 * @return true si contiene la cadena
+	 */
+	public static boolean hayError902(String respuesta, String respuestaAlmacenada, long responseCode) {
+		return (respuesta.contains(" -902"));
+	}
+	
+	/**
 	 * Comprueba si la respuesta contiene la cadena  -305
 	 * @param respuesta
 	 * @param respuestaAlmacenada
@@ -457,6 +468,13 @@ public class ComprobarErrores {
 					return true;
 				}
 			}
+			else if (respuestaAlmacenada.startsWith("{\"POSAZ520OperationResponse")) {
+				if(respuesta.substring(0, respuesta.indexOf("nombre_tarjeta")).equals(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("nombre_tarjeta")))
+						&& respuesta.substring(respuesta.indexOf("id_sexo"), respuesta.length())
+							.equals(respuestaAlmacenada.substring(respuestaAlmacenada.indexOf("id_sexo"), respuestaAlmacenada.length()))) {
+					return true;
+				}
+			}
 		} catch (Exception e) {
 			System.out.println(e);
 		}
@@ -504,6 +522,13 @@ public class ComprobarErrores {
 					return true;
 				}
 			}
+			else if (respuestaAlmacenada.startsWith("{\"POSAZ533OperationResponse")) {
+				if(respuesta.substring(0, respuesta.indexOf("audit_fec_modificacion")).equals(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("audit_fec_modificacion")))
+						&& respuesta.substring(respuesta.indexOf("audit_cod_usuario"), respuesta.length())
+						.equals(respuestaAlmacenada.substring(respuestaAlmacenada.indexOf("audit_cod_usuario"), respuestaAlmacenada.length()))) {
+					return true;
+				}
+			}
 		} catch (Exception e) {
 			System.out.println(e);
 		}
@@ -543,3 +568,4 @@ public class ComprobarErrores {
 	}
 }
 		
+	
