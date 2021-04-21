@@ -54,7 +54,7 @@ public class Util {
 			}
 			
 			if (ComprobarErrores.hayErrorCodRedPrestacional(respuesta, respuestaAlmacenada, responseCode)) {
-				return "Error CodRedPrestacional";
+				return "Error CodRedPrestacional[28870];28870";
 			}
 			
 			if (ComprobarErrores.hayErrorCambiarColeccion(respuesta, respuestaAlmacenada, responseCode)) {
