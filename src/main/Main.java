@@ -68,7 +68,7 @@ public class Main {
         grabarFichero.crearFichero("salida/"+tipo + NOMBRE_FICHERO_SALIDA_FILTRADO, true);
 
 
-        for(int fase = 0, carpeta = 4; carpeta <= numFasesCrear; fase++,carpeta++) {
+        for(int fase = 0, carpeta = 1; carpeta <= numFasesCrear; fase++,carpeta++) {
         	
         	String nombreCarpetaFase ="F"+carpeta+"resultados"+tipoResultado; 
         	File files[] = (new File(nombreCarpetaFase+"/")).listFiles(filtro);

@@ -25,8 +25,48 @@ public class Util {
 				return "error 504[25935];25935";
 			}
 			
+			if (ComprobarErrores.hayErrorFraction(respuesta, respuestaAlmacenada, responseCode)) {
+				return "error FRACTION_TOO_LONG[28895];28895";
+			}
+			
+			
+			if (ComprobarErrores.hayErrorBorraEntrada(respuesta, respuestaAlmacenada, responseCode)) {
+				return "error borra entrada[28880];28880";
+			}
+			if(responseCode == 500 || respuesta.contains("{\"Fault\":{\"faultstring\":\"Failure in") || respuestaAlmacenada.contains("{\"Fault\":{\"faultstring\":\"Failure in")) {
+				System.out.println(respuesta);
+				System.out.println(respuestaAlmacenada);
+
+			}
+			//Error en mainframe pero no en rai
+			
+			
+			if (ComprobarErrores.hayErrorConversionA(respuesta, respuestaAlmacenada, responseCode)) {
+				return "error conversion vs A[28887];28887";
+			}
+			
+			if (ComprobarErrores.hayErrorConversionB(respuesta, respuestaAlmacenada, responseCode)) {
+				return "error conversion vs B[28887];28887";
+			}
+			
+			if (ComprobarErrores.hayErrorConversionD(respuesta, respuestaAlmacenada, responseCode)) {
+				return "error conversion vs D[28887];28887";
+			}
+			
+			if (ComprobarErrores.hayErrorConversionMainA(respuesta, respuestaAlmacenada, responseCode)) {
+				return "error A VS CONVERSION[AAA];A";
+			}
+			
+			if (ComprobarErrores.hayErrorConversionMainB(respuesta, respuestaAlmacenada, responseCode)) {
+				return "error B VS CONVERSION[AAA];AAA";
+			}
+			
+			if (ComprobarErrores.hayErrorConversionMainD(respuesta, respuestaAlmacenada, responseCode)) {
+				return "error D VS CONVERSION[AAA];AAA";
+			}
+			
 			if (ComprobarErrores.hayError500(respuesta, respuestaAlmacenada, responseCode)) {
-				return "error 500 rep. pru. main[XXXXX];XXXXX";
+				//return "error 500 rep. pru. main[XXXXX];XXXXX";
 			}
 			
 			if (ComprobarErrores.hayError305(respuesta, respuestaAlmacenada, responseCode)) {
@@ -45,8 +85,12 @@ public class Util {
 				return "xml 502[27997];27997;";
 			}
 			
+			if (ComprobarErrores.hayErrorConvVsAbend(respuesta, respuestaAlmacenada, responseCode)) {
+				return "Conversion vs abend[26933];26933;";
+			}
+			
 			if (ComprobarErrores.hayError503(respuesta, respuestaAlmacenada, responseCode)) {
-				return "error 503 posible pase;";
+				return "error 503 servidor caido[27997];27997;";
 			}
 			
 			if (ComprobarErrores.hayErrorCodif(respuesta, respuestaAlmacenada, responseCode)) {
@@ -119,9 +163,7 @@ public class Util {
 				return "Error redefines[25494];25494";
 			}
 
-			if (ComprobarErrores.hayErrorRlel(respuesta, respuestaAlmacenada, responseCode)) {
-				return "RLEL mainframe;;";
-			}
+
 
 			if (ComprobarErrores.hayErrorCouldNotLoadModule(respuesta, respuestaAlmacenada, responseCode)) {
 				return "Could not load module[26119];26119";
@@ -263,7 +305,9 @@ public class Util {
 				System.err.println(e);
 			}
 			
-				
+			if (ComprobarErrores.hayErrorRlel(respuesta, respuestaAlmacenada, responseCode)) {
+				return "RLEL mainframe;;";
+			}	
 
 			if (respuestaAlmacenada.contains("Failure interacting with CICS")
 					&& !respuesta.contains("Failure interacting with CICS")) {
@@ -275,8 +319,8 @@ public class Util {
 
 					return "abend ASRA vs error A [27999];27999";
 				} else {
-					System.out.println(respuestaAlmacenada);
-					System.out.println(respuesta.substring(0, 1000));
+//					System.out.println(respuestaAlmacenada);
+//					System.out.println(respuesta.substring(0, 1000));
 					return "Error cics vs other [27992];27992";
 				}
 			}
@@ -319,8 +363,8 @@ public class Util {
 										.equals(respuesta.substring(2301)))) {
 					return "sin error, parte dinamica (secuencia consulta)";
 				}
-				System.out.println(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("nombre_via_e")));
-				System.out.println(respuestaAlmacenada.substring(2300));
+				//System.out.println(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("nombre_via_e")));
+				//System.out.println(respuestaAlmacenada.substring(2300));
 				if(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("nombre_via_e")).equals(respuesta.substring(0, respuesta.indexOf("nombre_via_e")))) {
 					System.out.println("La primera parte es igual");
 					if(respuestaAlmacenada.substring(respuestaAlmacenada.indexOf("numero_e"), respuestaAlmacenada.indexOf("cod_consulta_s"))
@@ -394,9 +438,10 @@ public class Util {
 			e.printStackTrace();
 		}
 
-		// System.err.println(respuesta);
-		// System.err.println(respuestaAlmacenada);
+		 System.err.println(respuesta);
+		 System.err.println(respuestaAlmacenada);
 		
+		 System.out.println();
 		if (respuestaAlmacenada.startsWith("{\"POSAZ515OperationResponse")) {
 			//System.err.println(respuesta);
 			//System.err.println(respuestaAlmacenada);

@@ -20,8 +20,125 @@ public class ComprobarErrores {
 	 * @param codigoRetorno
 	 * @return true si contiene error 504
 	 */
+	public static boolean hayErrorFraction(String respuesta, String respuestaAlmacenada, long responseCode) {
+		if(respuesta.contains("OUTPUT_OVERFLOW") && respuestaAlmacenada.contains("FRACTION_TOO_LONG")) {
+		System.out.println(respuesta);
+		System.out.println(respuestaAlmacenada);
+		System.out.println();
+		}
+		return(respuesta.contains("OUTPUT_OVERFLOW") && respuestaAlmacenada.contains("FRACTION_TOO_LONG"));
+	}
+	
+	
+	/**
+	 * Comprueba si la respuesta almacenada tiene un codigo 500
+	 * @param respuesta
+	 * @param respuestaAlmacenada
+	 * @param codigoRetorno
+	 * @return true si contiene error 504
+	 */
 	public static boolean hayError500(String respuesta, String respuestaAlmacenada, long responseCode) {
-		return(responseCode == 500);
+		if(responseCode == 500 && !respuesta.contains("ExecuteNonQuery") && !respuesta.contains("Communication link failure")) {
+		System.out.println(respuesta);
+		System.out.println(respuestaAlmacenada);
+		System.out.println();
+		}
+		
+		return(responseCode == 500  && !respuesta.contains("ExecuteNonQuery") && !respuesta.contains("Communication link failure"));
+	}
+	
+	/**
+	 * Comprueba si la respuesta almacenada tiene un codigo 500
+	 * @param respuesta
+	 * @param respuestaAlmacenada
+	 * @param codigoRetorno
+	 * @return true si contiene error 504
+	 */
+	public static boolean hayErrorBorraEntrada(String respuesta, String respuestaAlmacenada, long responseCode) {
+		if(respuestaAlmacenada.replaceAll("S","").equals(respuesta.replaceAll("S",""))) {
+		System.out.println(respuesta);
+		System.out.println(respuestaAlmacenada);
+		System.out.println();
+		}
+		return(respuestaAlmacenada.contains("JSON to data transformation failed")
+				&& respuesta.contains(" \"tipo_error\": \"B"));
+	}
+	
+	
+	/**
+	 * Comprueba si la respuesta almacenada tiene un codigo 500
+	 * @param respuesta
+	 * @param respuestaAlmacenada
+	 * @param codigoRetorno
+	 * @return true si contiene error 504
+	 */
+	public static boolean hayErrorConversionA(String respuesta, String respuestaAlmacenada, long responseCode) {
+		return (respuesta.contains("JSON to data transformation failed") && respuestaAlmacenada.contains("tipo_error\":\"A"));
+	}
+	
+	/**
+	 * Comprueba si la respuesta almacenada tiene un codigo 500
+	 * @param respuesta
+	 * @param respuestaAlmacenada
+	 * @param codigoRetorno
+	 * @return true si contiene error 504
+	 */
+	public static boolean hayErrorConversionB(String respuesta, String respuestaAlmacenada, long responseCode) {
+
+		return (respuesta.contains("JSON to data transformation failed") && respuestaAlmacenada.contains("tipo_error\":\"B"));
+			
+
+	}
+	
+	/**
+	 * Comprueba si la respuesta almacenada tiene un codigo 500
+	 * @param respuesta
+	 * @param respuestaAlmacenada
+	 * @param codigoRetorno
+	 * @return true si contiene error 504
+	 */
+	public static boolean hayErrorConversionMainD(String respuesta, String respuestaAlmacenada, long responseCode) {
+
+		return (respuestaAlmacenada.contains("JSON to data transformation failed") && respuesta.contains("tipo_error\":\"D"));
+	}
+	
+	/**
+	 * Comprueba si la respuesta almacenada tiene un codigo 500
+	 * @param respuesta
+	 * @param respuestaAlmacenada
+	 * @param codigoRetorno
+	 * @return true si contiene error 504
+	 */
+	public static boolean hayErrorConversionMainA(String respuesta, String respuestaAlmacenada, long responseCode) {
+		return (respuestaAlmacenada.contains("JSON to data transformation failed") && respuesta.contains("tipo_error\":\"A"));
+	}
+	
+	/**
+	 * Comprueba si la respuesta almacenada tiene un codigo 500
+	 * @param respuesta
+	 * @param respuestaAlmacenada
+	 * @param codigoRetorno
+	 * @return true si contiene error 504
+	 */
+	public static boolean hayErrorConversionMainB(String respuesta, String respuestaAlmacenada, long responseCode) {
+
+		return (respuestaAlmacenada.contains("JSON to data transformation failed") && respuesta.contains("tipo_error\":\"B"));
+			
+
+	}
+	
+	/**
+	 * Comprueba si la respuesta almacenada tiene un codigo 500
+	 * @param respuesta
+	 * @param respuestaAlmacenada
+	 * @param codigoRetorno
+	 * @return true si contiene error 504
+	 */
+	public static boolean hayErrorConversionD(String respuesta, String respuestaAlmacenada, long responseCode) {
+
+		return (respuesta.contains("JSON to data transformation failed") && respuestaAlmacenada.contains("tipo_error\":\"D"));
+			
+
 	}
 	
 	/**
@@ -220,6 +337,7 @@ public class ComprobarErrores {
 	 * @return true si contiene la cadena
 	 */
 	public static boolean hayErrorRlel(String respuesta, String respuestaAlmacenada, long responseCode) {
+		if(respuesta.contains("ExecuteNonQuery")) return false;
 		return (respuestaAlmacenada.contains("RLEL"));
 	}
 	
@@ -295,17 +413,17 @@ public class ComprobarErrores {
 	*/
 			//Validar sin tener en cuenta la parte dinamica, la fecha ultimo proceso
 			
-			if(!(respuesta.substring(0, 2461).equals(respuestaAlmacenada.substring(0, 2461)) && 
-					respuesta.substring(2511).equals(respuestaAlmacenada.substring(2511)))) {
-				System.out.println(respuesta.substring(0, 2461));
-				System.out.println(respuestaAlmacenada.substring(0, 2461));
-				System.out.println(respuesta.substring(2511));
-				System.out.println(respuestaAlmacenada.substring(2511));
-				System.out.println(respuesta);
-				System.out.println(respuestaAlmacenada);
-
-				System.out.println();
-			}
+//			if(!(respuesta.substring(0, 2461).equals(respuestaAlmacenada.substring(0, 2461)) && 
+//					respuesta.substring(2511).equals(respuestaAlmacenada.substring(2511)))) {
+//				System.out.println(respuesta.substring(0, 2461));
+//				System.out.println(respuestaAlmacenada.substring(0, 2461));
+//				System.out.println(respuesta.substring(2511));
+//				System.out.println(respuestaAlmacenada.substring(2511));
+//				System.out.println(respuesta);
+//				System.out.println(respuestaAlmacenada);
+//
+//				System.out.println();
+//			}
 			return(respuesta.substring(0, 2461).equals(respuestaAlmacenada.substring(0, 2461)) && 
 					respuesta.substring(2511).equals(respuestaAlmacenada.substring(2511)));
 			
@@ -368,6 +486,22 @@ public class ComprobarErrores {
 	}
 	
 	/**
+	 * Comprueba si la respuesta contiene error validacion vs error abend
+	 * @param respuesta
+	 * @param respuestaAlmacenada
+	 * @param codigoRetorno
+	 * @return true si contiene la cadena
+	 */
+	public static boolean hayErrorConvVsAbend(String respuesta, String respuestaAlmacenada, long responseCode) {
+
+		return (respuesta != null && respuestaAlmacenada != null &&
+				respuestaAlmacenada.contains("OUTPUT_OVERFLOW") && 
+				respuesta.contains("abended"));
+				
+	}
+	
+	
+	/**
 	 * Comprueba si la respuesta contiene cambio en auditusuario
 	 * @param respuesta
 	 * @param respuestaAlmacenada
@@ -406,8 +540,8 @@ public class ComprobarErrores {
 			String cadenaReferencia = cadenaRai;
 			String cadenaReferenciaF = cadenaRai;
 			while(indiceActual < maxTamanio) {
-				System.out.println(cadenaReferencia.length());
-				System.out.println(cadenaReferenciaF.length());
+//				System.out.println(cadenaReferencia.length());
+//				System.out.println(cadenaReferenciaF.length());
 				indiceActual += cadenaReferencia.indexOf("datos_idiomas");
 				indiceFinActual += cadenaReferenciaF.indexOf("datos_gerentes");
 				try {
@@ -416,10 +550,10 @@ public class ComprobarErrores {
 						return false;
 					}
 					else {
-						System.out.println(cadenaRai.substring(indiceActual, indiceFinActual));
-						System.out.println(cadenaMai.substring(indiceActual, indiceFinActual));
-						System.out.println(cadenaRai);
-						System.out.println(cadenaMai);
+//						System.out.println(cadenaRai.substring(indiceActual, indiceFinActual));
+//						System.out.println(cadenaMai.substring(indiceActual, indiceFinActual));
+//						System.out.println(cadenaRai);
+//						System.out.println(cadenaMai);
 						if(!cadenaRai.substring(indiceActual, indiceFinActual).equals(cadenaMai.substring(indiceActual, indiceFinActual))) {
 							return true;
 						}
