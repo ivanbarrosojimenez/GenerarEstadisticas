@@ -738,6 +738,17 @@ public class ComprobarErrores {
 					return true;
 				}
 			}
+			else if (respuestaAlmacenada.startsWith("{\"POSMZ140OperationResponse")) {
+				if(respuesta.substring(0, respuesta.indexOf("fecha_baja_mon_s")).equals(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("fecha_baja_mon_s")))
+						&& respuesta.substring(respuesta.indexOf("ind_susp_derechos_s"), respuesta.length())
+						.equals(respuestaAlmacenada.substring(respuestaAlmacenada.indexOf("ind_susp_derechos_s"), respuestaAlmacenada.length()))) {
+					return true;
+				} else if(respuesta.substring(0, respuesta.indexOf("id_prestaciones_abiertas_s")).equals(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("id_prestaciones_abiertas_s")))
+						&& respuesta.substring(respuesta.indexOf("rgsmo140_errores"), respuesta.length())
+						.equals(respuestaAlmacenada.substring(respuestaAlmacenada.indexOf("rgsmo140_errores"), respuestaAlmacenada.length()))) {
+					return true;
+				}
+			}
 		} catch (Exception e) {
 			System.out.println(e);
 		}

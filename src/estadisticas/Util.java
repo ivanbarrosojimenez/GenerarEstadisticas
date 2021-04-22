@@ -193,9 +193,9 @@ public class Util {
 				return "Communication link failure[26030];26030";
 			}
 
-			if (respuesta.startsWith("{\"POSMZ140OperationResponse")) {
+			/*if (respuesta.startsWith("{\"POSMZ140OperationResponse")) {
 				return "Bloquea prueba por error QIX;26373";
-			}
+			}*/
 
 			if (respuesta.replaceAll(" ", "").equals(respuestaAlmacenada.replaceAll(" ", ""))) {
 				return "TRIM EN VALOR[25497];25497";
@@ -442,7 +442,7 @@ public class Util {
 		 System.err.println(respuestaAlmacenada);
 		
 		 System.out.println();
-		if (respuestaAlmacenada.startsWith("{\"POSAZ515OperationResponse")) {
+		if (respuestaAlmacenada.startsWith("{\"POSMZ140OperationResponse")) {
 			//System.err.println(respuesta);
 			//System.err.println(respuestaAlmacenada);
 		}
