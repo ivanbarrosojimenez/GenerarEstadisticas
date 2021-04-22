@@ -54,15 +54,15 @@ public class Util {
 			}
 			
 			if (ComprobarErrores.hayErrorConversionMainA(respuesta, respuestaAlmacenada, responseCode)) {
-				return "error A VS CONVERSION[AAA];A";
+				return "error A VS CONVERSION[28908];28908";
 			}
 			
 			if (ComprobarErrores.hayErrorConversionMainB(respuesta, respuestaAlmacenada, responseCode)) {
-				return "error B VS CONVERSION[AAA];AAA";
+				return "error B VS CONVERSION[28908];28908";
 			}
 			
 			if (ComprobarErrores.hayErrorConversionMainD(respuesta, respuestaAlmacenada, responseCode)) {
-				return "error D VS CONVERSION[AAA];AAA";
+				return "error D VS CONVERSION[28908];28908";
 			}
 			
 			if (ComprobarErrores.hayError500(respuesta, respuestaAlmacenada, responseCode)) {
