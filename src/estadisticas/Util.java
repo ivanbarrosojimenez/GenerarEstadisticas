@@ -20,7 +20,7 @@ public class Util {
 			// AL INICIO SE DEBEN PONER LOS ERRORES NO SOLUCIONADOS PARA OBTENER MEJOR
 			// RENDIMIENTO.
 
-			/// Identificar el tipo de error según el retorno de las respuestas
+			/// Identificar el tipo de error segï¿½n el retorno de las respuestas
 			if (ComprobarErrores.hayError504(respuesta, respuestaAlmacenada, responseCode)) {
 				return "error 504[25935];25935";
 			}
@@ -186,7 +186,7 @@ public class Util {
 			}
 
 			if (ComprobarErrores.hayErrorPOSAZ611CaracterCod(respuesta, respuestaAlmacenada, responseCode)) {
-				return "Error caracter codificación retorno[26963];26963";
+				return "Error caracter codificaciï¿½n retorno[26963];26963";
 			}
 
 			if (ComprobarErrores.hayErrorCommunicationLink(respuesta, respuestaAlmacenada, responseCode)) {
@@ -201,8 +201,8 @@ public class Util {
 				return "TRIM EN VALOR[25497];25497";
 			}
 
-			// if(respuestaAlmacenada.replaceAll("ƒÂ", "?").equals(respuesta)) {
-			// return "error codificación ƒ";
+			// if(respuestaAlmacenada.replaceAll("ï¿½ï¿½", "?").equals(respuesta)) {
+			// return "error codificaciï¿½n ï¿½";
 			// }..
 			
 			
@@ -370,8 +370,8 @@ public class Util {
 					if(respuestaAlmacenada.substring(respuestaAlmacenada.indexOf("numero_e"), respuestaAlmacenada.indexOf("cod_consulta_s"))
 								.equals((respuesta.substring(respuesta.indexOf("numero_e"), respuesta.indexOf("cod_consulta_s"))))) {
 						System.out.println("Segunda parte con variable pero igual");
-						if(respuestaAlmacenada.substring(respuestaAlmacenada.indexOf("rgsao503_errores"))
-								.equals((respuesta.substring(respuesta.indexOf("rgsao503_errores"))))) {
+						if(respuestaAlmacenada.substring(respuestaAlmacenada.indexOf("rgsao503_salida"))
+								.equals((respuesta.substring(respuesta.indexOf("rgsao503_salida"))))) {
 							return "Error codificacion[28496];28496";
 							
 						}
@@ -390,8 +390,8 @@ public class Util {
 								.equals((respuesta.substring(respuesta.indexOf("numero_e"),
 										respuesta.indexOf("cod_consulta_s"))))) {
 							System.out.println("Segunda parte con variable pero igual");
-							if (respuestaAlmacenada.substring(respuestaAlmacenada.indexOf("rgsao503_errores"))
-									.equals((respuesta.substring(respuesta.indexOf("rgsao503_errores"))))) {
+							if (respuestaAlmacenada.substring(respuestaAlmacenada.indexOf("rgsao503_salida"))
+									.equals((respuesta.substring(respuesta.indexOf("rgsao503_salida"))))) {
 								return "Error codificacion[28496];28496";
 
 							}

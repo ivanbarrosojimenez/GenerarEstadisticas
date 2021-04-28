@@ -836,6 +836,14 @@ public class ComprobarErrores {
 					}
 				}
 			}
+			else if (respuestaAlmacenada.startsWith("{\"POSAZ503OperationResponse")) {
+				if(respuesta.substring(0, respuesta.indexOf("cod_consulta_s")).equals(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("cod_consulta_s")))
+						&& respuesta.substring(respuesta.indexOf("rgsao503_errores"), respuesta.length())
+						.equals(respuestaAlmacenada.substring(respuestaAlmacenada.indexOf("rgsao503_errores"), respuestaAlmacenada.length()))) {
+					return true;
+				}
+			}
+			
 		} catch (Exception e) {
 			System.out.println(e);
 		}
