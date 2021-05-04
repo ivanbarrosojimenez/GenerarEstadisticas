@@ -46,7 +46,7 @@ public class Util {
 			}
 			
 			if (ComprobarErrores.hayErrorConversionB(respuesta, respuestaAlmacenada, responseCode)) {
-				return "error conversion vs B[28887];28887";
+				return "error conversion vs B (Cambiar en parte front)[28887]";
 			}
 			
 			if (ComprobarErrores.hayErrorConversionD(respuesta, respuestaAlmacenada, responseCode)) {
@@ -182,6 +182,42 @@ public class Util {
 
 			// Parche para validar la parte dinamica en respuesta del 631
 			if (ComprobarErrores.hayErrorPOSAZ631(respuesta, respuestaAlmacenada, responseCode)) {
+				return "Sin error, parte dinamica en respuesta";
+			}
+			
+			if (ComprobarErrores.hayErrorPOSAZ503(respuesta, respuestaAlmacenada, responseCode)) {
+				return "Sin error, parte dinamica en respuesta";
+			}
+			
+			if (ComprobarErrores.hayErrorPOSAZ514(respuesta, respuestaAlmacenada, responseCode)) {
+				return "Sin error, parte dinamica en respuesta";
+			}
+			
+			if (ComprobarErrores.hayErrorPOSAZ516(respuesta, respuestaAlmacenada, responseCode)) {
+				return "Sin error, parte dinamica en respuesta";
+			}
+			
+			if (ComprobarErrores.hayErrorPOSAZ558(respuesta, respuestaAlmacenada, responseCode)) {
+				return "Sin error, parte dinamica en respuesta";
+			}
+			
+			if (ComprobarErrores.hayErrorPOSAZ582(respuesta, respuestaAlmacenada, responseCode)) {
+				return "Sin error, parte dinamica en respuesta";
+			}
+			
+			if (ComprobarErrores.hayErrorPOSAZ626(respuesta, respuestaAlmacenada, responseCode)) {
+				return "Sin error, parte dinamica en respuesta";
+			}
+			
+			if (ComprobarErrores.hayErrorPOSAZ518(respuesta, respuestaAlmacenada, responseCode)) {
+				return "Sin error, parte dinamica en respuesta";
+			}
+			
+			if (ComprobarErrores.hayErrorPOSAZ130(respuesta, respuestaAlmacenada, responseCode)) {
+				return "Sin error, parte dinamica en respuesta";
+			}
+			
+			if (ComprobarErrores.hayErrorPOSAZ533(respuesta, respuestaAlmacenada, responseCode)) {
 				return "Sin error, parte dinamica en respuesta";
 			}
 
@@ -436,13 +472,10 @@ public class Util {
 		} catch (Exception e) {
 			System.err.println(e);
 			e.printStackTrace();
-		}
-
-		 System.err.println(respuesta);
-		 System.err.println(respuestaAlmacenada);
+		}		 
 		
 		 System.out.println();
-		if (respuestaAlmacenada.startsWith("{\"POSLZ170OperationResponse")) {
+		if (respuestaAlmacenada.startsWith("{\"POSAZ130OperationResponse")) {
 			//System.err.println(respuesta);
 			//System.err.println(respuestaAlmacenada);
 		}
