@@ -2,6 +2,18 @@ package estadisticas;
 
 public class ComprobarErrores {
 	
+	public static boolean hayError29226(String respuesta, String respuestaAlmacenada, long responseCode) {
+		/*if (respuesta.contains("Timeout expired")) {
+			return true;
+		}*/
+		
+		if (respuesta.startsWith("{\"Fault\":{\"faultstring\":\"Failure interacting with CICS\",\"detail\":{\"CICSFault\":\"Timeout expired.  The timeout period elapsed prior to completion of the operation or the server is not responding.\"}}}")) {
+			return true;
+		}
+		
+		return false;
+	}
+	
 	/**
 	 * Comprueba si la respuesta tiene un codigo 504
 	 * @param respuesta
@@ -537,6 +549,46 @@ public class ComprobarErrores {
 		return false;
 	}	
 	
+	public static boolean hayErrorPOSAZ593(String respuesta, String respuestaAlmacenada, long responseCode) {
+		if (respuesta.startsWith("{\"POSAZ593OperationResponse")) {		
+			try {
+				if(respuesta.substring(0, respuesta.indexOf("num_solicitud_e")).equals(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("num_solicitud_e")))
+						&& respuesta.substring(respuesta.indexOf("nif_e"), respuesta.length())
+						.equals(respuestaAlmacenada.substring(respuestaAlmacenada.indexOf("nif_e"), respuestaAlmacenada.length()))) {
+					return true;
+				}	
+			} catch (Exception e) {
+				System.out.println(e);
+			}										
+		}
+		
+		return false;
+	}
+	
+	public static boolean hayErrorPOSLZ168(String respuesta, String respuestaAlmacenada, long responseCode) {
+		if (respuesta.startsWith("{\"POSLZ168OperationResponse")) {		
+			if(respuesta.substring(0, respuesta.indexOf("imp_cuota_parm_prx_s")).equals(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("imp_cuota_parm_prx_s")))
+					&& respuesta.substring(respuesta.indexOf("imp_incremento_cap_prx_s"), respuesta.length())
+					.equals(respuestaAlmacenada.substring(respuestaAlmacenada.indexOf("imp_incremento_cap_prx_s"), respuestaAlmacenada.length()))) {
+				return true;
+			}							
+		}
+		
+		return false;
+	}
+	
+	public static boolean hayErrorPOSAZ610(String respuesta, String respuestaAlmacenada, long responseCode) {
+		if (respuesta.startsWith("{\"POSAZ610OperationResponse")) {		
+			if(respuesta.substring(0, respuesta.indexOf("nom_respon_consejo_e")).equals(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("nom_respon_consejo_e")))
+					&& respuesta.substring(respuesta.indexOf("audit_fec_alta_e"), respuesta.length())
+					.equals(respuestaAlmacenada.substring(respuestaAlmacenada.indexOf("audit_fec_alta_e"), respuestaAlmacenada.length()))) {
+				return true;
+			}							
+		}
+		
+		return false;
+	}
+	
 	/**
 	 * Comprueba si la respuesta es valida para la transaccion 611 controlando \n por ?
 	 * @param respuesta
@@ -912,7 +964,19 @@ public class ComprobarErrores {
 						}						
 					}
 				}
-			}		
+			}	
+			else if (respuestaAlmacenada.startsWith("{\"POSAZ500OperationResponse")) {
+				if(respuesta.substring(0, respuesta.indexOf("rgsao500_reg")).equals(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("rgsao500_reg")))
+						&& respuesta.substring(respuesta.indexOf("rgsao500_errores"), respuesta.length())
+						.equals(respuestaAlmacenada.substring(respuestaAlmacenada.indexOf("rgsao500_errores"), respuestaAlmacenada.length()))) {
+					return true;
+				}
+			}
+			else if (respuestaAlmacenada.startsWith("{\"POSAZ524OperationResponse")) {
+				if(respuesta.substring(0, respuesta.indexOf("rgsao524s")).equals(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("rgsao524s")))) {
+					return true;
+				}
+			}
 			
 		} catch (Exception e) {
 			System.out.println(e);

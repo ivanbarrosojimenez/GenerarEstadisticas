@@ -1,5 +1,8 @@
 package estadisticas;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -14,11 +17,16 @@ public class Util {
 	 * @param respuestaAlmacenada
 	 * @param responseCode
 	 * @return tipo de error localizado
+	 * @throws IOException 
 	 */
-	protected static String obtenerTipoDeError(String respuesta, String respuestaAlmacenada, Long responseCode) {
+	protected static String obtenerTipoDeError(String respuesta, String respuestaAlmacenada, Long responseCode) throws IOException {
 		try {
 			// AL INICIO SE DEBEN PONER LOS ERRORES NO SOLUCIONADOS PARA OBTENER MEJOR
 			// RENDIMIENTO.
+			
+			if (ComprobarErrores.hayError29226(respuesta, respuestaAlmacenada, responseCode)) {
+				return "error [29226];29226";
+			}
 
 			/// Identificar el tipo de error seg�n el retorno de las respuestas
 			if (ComprobarErrores.hayError504(respuesta, respuestaAlmacenada, responseCode)) {
@@ -98,7 +106,7 @@ public class Util {
 			}
 			
 			if (ComprobarErrores.hayErrorCodRedPrestacional(respuesta, respuestaAlmacenada, responseCode)) {
-				return "Error CodRedPrestacional[28870];28870";
+				return "RedPrestacional Modulo polizas[28870]";
 			}
 			
 			if (ComprobarErrores.hayErrorCambiarColeccion(respuesta, respuestaAlmacenada, responseCode)) {
@@ -218,6 +226,18 @@ public class Util {
 			}
 			
 			if (ComprobarErrores.hayErrorPOSAZ533(respuesta, respuestaAlmacenada, responseCode)) {
+				return "Sin error, parte dinamica en respuesta";
+			}
+			
+			if (ComprobarErrores.hayErrorPOSAZ593(respuesta, respuestaAlmacenada, responseCode)) {
+				return "Sin error, parte dinamica en respuesta";
+			}
+			
+			if (ComprobarErrores.hayErrorPOSLZ168(respuesta, respuestaAlmacenada, responseCode)) {
+				return "Sin error, parte dinamica en respuesta";
+			}
+			
+			if (ComprobarErrores.hayErrorPOSAZ610(respuesta, respuestaAlmacenada, responseCode)) {
 				return "Sin error, parte dinamica en respuesta";
 			}
 
@@ -475,9 +495,9 @@ public class Util {
 		}		 
 		
 		 System.out.println();
-		if (respuestaAlmacenada.startsWith("{\"POSAZ130OperationResponse")) {
-			//System.err.println(respuesta);
-			//System.err.println(respuestaAlmacenada);
+		if (respuestaAlmacenada.startsWith("{\"POSAZ597OperationResponse")) {
+			System.out.println(respuesta);
+			System.out.println(respuestaAlmacenada);
 		}
 
 		return "Error sin detectar";
