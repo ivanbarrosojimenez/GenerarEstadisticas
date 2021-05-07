@@ -23,7 +23,9 @@ public class Util {
 		try {
 			// AL INICIO SE DEBEN PONER LOS ERRORES NO SOLUCIONADOS PARA OBTENER MEJOR
 			// RENDIMIENTO.
-			
+			if(respuesta.startsWith("{\"POSAZ500OperationResponse")) {
+				System.out.println();
+			}
 			if (ComprobarErrores.hayError29226(respuesta, respuestaAlmacenada, responseCode)) {
 				return "error [29226];29226";
 			}
@@ -495,10 +497,10 @@ public class Util {
 		}		 
 		
 		 System.out.println();
-		if (respuestaAlmacenada.startsWith("{\"POSAZ597OperationResponse")) {
-			System.out.println(respuesta);
-			System.out.println(respuestaAlmacenada);
-		}
+//		if (respuestaAlmacenada.startsWith("{\"POSAZ597OperationResponse")) {
+//			System.out.println(respuesta);
+//			System.out.println(respuestaAlmacenada);
+//		}
 
 		return "Error sin detectar";
 		// TODO PARCHE FECHA PROCESO PARA 631 fec_ult_proceso_s

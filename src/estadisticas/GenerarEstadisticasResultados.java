@@ -143,12 +143,19 @@ public class GenerarEstadisticasResultados {
 
 				JSONObject response = (JSONObject) execution.get("response");
 				Long responseCode = 999l;
+				String errorResponseNull = "";
 				try {
 					responseCode = (Long) response.get("code");
 
 				} catch (Exception e) {
-					// e.printStackTrace();
-					// System.out.println();
+					if(execution != null)
+					if(execution.get("requestError") != null) {
+						JSONObject requestError = (JSONObject) execution.get("requestError");
+						errorResponseNull += "errno=" + requestError.get("errno") + " - ";
+						errorResponseNull += "code=" + requestError.get("code");
+						responseCode = -999l;
+					}
+					System.out.println("response is null.");
 				}
 
 				JSONArray assertions = (JSONArray) execution.get("assertions");
@@ -192,6 +199,9 @@ public class GenerarEstadisticasResultados {
 										}
 										if (errorDetectado.startsWith("Error sin detectar") && responseCode == 999) {
 											errorDetectado = "Error tratar respuesta (posible json incompleto)";
+										}
+										if (errorDetectado.startsWith("Error sin detectar") && responseCode == -999) {
+											errorDetectado = "Error "+  errorResponseNull;
 										}
 									} catch (Exception e) {
 	
