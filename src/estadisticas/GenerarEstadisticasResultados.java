@@ -215,9 +215,9 @@ public class GenerarEstadisticasResultados {
 				}
 				
 				linea += ";" + resultadoGlobal + ";" + errorDetectado;
-//				if(!resultadoGlobal) {
+				//if(!resultadoGlobal) {
 					//linea+=";" + respuesta + ";" + respuestaAlmacenada;
-			//	}
+				//}
 				errorDetectado = "";
 				// CREAR FICHERO CON LOS ERRORES PARA CREAR COLECCIONES
 				if (!resultadoGlobal) {

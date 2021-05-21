@@ -48,8 +48,8 @@ public class Main {
 //    static String NOMBRE_FICHERO_ENTRADA_2_5 = "host6.json";
     /** * * * * * * * * * * * * * * * * * * * * * * * * * * */
     /** - - - - - MODIFICAR SOLO ESTO - - - - -*/
-	static int numFasesCrear = 7;//Si se quiere ejecutar solo una fase cambiar tambien donde pone carpeta con el mismo numero (L67)
-	static String tipoResultado = "Db2"; //poner SQL o Db2;
+	static int numFasesCrear = 9;//Si se quiere ejecutar solo una fase cambiar tambien donde pone carpeta con el mismo numero (L67)
+	static String tipoResultado = "Iaa"; //poner SQL o Db2 o Iaa;
 	static boolean comprimirYEliminar = false;
 	static String tipo = "resultados";//tiempos o resultados
 	/**  - - - FIN MODIFICAR SOLO ESTO - - - - -  */
@@ -86,7 +86,7 @@ public class Main {
 					StringBuffer sF0 = estadisticas.obtenerSalidaNewMan(
 							"F"+carpeta+"resultadosDb2"+"/"+files[i].getName(),
 							"F"+carpeta+"resultadosSQL"+"/"+files[i].getName(), 
-							i == 0 && fase == 0);
+							i == 0 && fase == 0);					
 	                grabarFichero.agregarAFichero(sF0.toString());
 				}
         	}

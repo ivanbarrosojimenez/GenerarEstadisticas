@@ -242,6 +242,10 @@ public class Util {
 			if (ComprobarErrores.hayErrorPOSAZ610(respuesta, respuestaAlmacenada, responseCode)) {
 				return "Sin error, parte dinamica en respuesta";
 			}
+			
+			if (ComprobarErrores.hayErrorPOSMZ142(respuesta, respuestaAlmacenada, responseCode)) {
+				return "Sin error, parte dinamica en respuesta";
+			}
 
 			if (ComprobarErrores.hayErrorPOSAZ611CaracterCod(respuesta, respuestaAlmacenada, responseCode)) {
 				return "Error caracter codificaci�n retorno[26963];26963";
@@ -497,10 +501,10 @@ public class Util {
 		}		 
 		
 		 System.out.println();
-//		if (respuestaAlmacenada.startsWith("{\"POSAZ597OperationResponse")) {
-//			System.out.println(respuesta);
-//			System.out.println(respuestaAlmacenada);
-//		}
+		if (respuestaAlmacenada.startsWith("{\"POSAZ618OperationResponse")) {
+			System.out.println(respuesta);
+			System.out.println(respuestaAlmacenada);
+		}
 
 		return "Error sin detectar";
 		// TODO PARCHE FECHA PROCESO PARA 631 fec_ult_proceso_s

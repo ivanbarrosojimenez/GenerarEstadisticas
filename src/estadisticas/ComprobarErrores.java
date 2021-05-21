@@ -790,14 +790,7 @@ public class ComprobarErrores {
 						.equals(respuestaAlmacenada.substring(respuestaAlmacenada.indexOf("invocacion_tran"), respuestaAlmacenada.indexOf("invocacion_tran"))))) {
 					return true;
 				}
-			}
-			else if (respuestaAlmacenada.startsWith("{\"POSMZ142OperationResponse")) {
-				if(respuesta.substring(0, respuesta.indexOf("fec_modif_pre_s")).equals(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("fec_modif_pre_s")))
-						&& respuesta.substring(respuesta.indexOf("imp_definitivo_pre_s"), respuesta.length())
-						.equals(respuestaAlmacenada.substring(respuestaAlmacenada.indexOf("imp_definitivo_pre_s"), respuestaAlmacenada.length()))) {
-					return true;
-				}
-			}
+			}			
 			else if (respuestaAlmacenada.startsWith("{\"POSMZ141OperationResponse")) {
 				if(respuesta.substring(0, respuesta.indexOf("tmparpre_salida")).equals(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("tmparpre_salida")))
 						&& respuesta.substring(respuesta.indexOf("rgsmo141_errores"), respuesta.length())
@@ -822,19 +815,42 @@ public class ComprobarErrores {
 						}						
 					}
 				}
-			}	
-			else if (respuestaAlmacenada.startsWith("{\"POSAZ500OperationResponse")) {
+			}
+			else if (respuestaAlmacenada.startsWith("{\"POSMZ138OperationResponse")) {
+				if(!(respuesta.substring(respuesta.indexOf("resultado_ejecucion_servicio"), respuesta.indexOf("invocacion_tran"))
+						.equals(respuestaAlmacenada.substring(respuestaAlmacenada.indexOf("resultado_ejecucion_servicio"), respuestaAlmacenada.indexOf("invocacion_tran"))))) {
+					return true;
+				}
+			}
+			else if (respuestaAlmacenada.startsWith("{\"POSMZ135OperationResponse")) {
+				if(!(respuesta.substring(respuesta.indexOf("resultado_ejecucion_servicio"), respuesta.indexOf("invocacion_tran"))
+						.equals(respuestaAlmacenada.substring(respuestaAlmacenada.indexOf("resultado_ejecucion_servicio"), respuestaAlmacenada.indexOf("invocacion_tran"))))) {
+					return true;
+				}
+			}
+			else if (respuestaAlmacenada.startsWith("{\"POSLZ170OperationResponse")) {
+				if(!(respuesta.substring(respuesta.indexOf("resultado_ejecucion_servicio"), respuesta.indexOf("invocacion_tran"))
+						.equals(respuestaAlmacenada.substring(respuestaAlmacenada.indexOf("resultado_ejecucion_servicio"), respuestaAlmacenada.indexOf("invocacion_tran"))))) {
+					return true;
+				}
+			}
+			else if (respuestaAlmacenada.startsWith("{\"POSLZ169OperationResponse")) {
+				if(respuesta.substring(0, respuesta.indexOf("ind_fin_datos_s")).equals(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("ind_fin_datos_s")))) {
+					return true;
+				}
+			}
+			/*else if (respuestaAlmacenada.startsWith("{\"POSAZ500OperationResponse")) {
 				if(respuesta.substring(0, respuesta.indexOf("rgsao500_reg")).equals(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("rgsao500_reg")))
 						&& respuesta.substring(respuesta.indexOf("rgsao500_errores"), respuesta.length())
 						.equals(respuestaAlmacenada.substring(respuestaAlmacenada.indexOf("rgsao500_errores"), respuestaAlmacenada.length()))) {
 					return true;
 				}
-			}
-			else if (respuestaAlmacenada.startsWith("{\"POSAZ524OperationResponse")) {
+			}*/
+			/*else if (respuestaAlmacenada.startsWith("{\"POSAZ524OperationResponse")) {
 				if(respuesta.substring(0, respuesta.indexOf("rgsao524s")).equals(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("rgsao524s")))) {
 					return true;
 				}
-			}
+			}*/
 			
 		} catch (Exception e) {
 			//System.out.println(e);
@@ -1014,9 +1030,9 @@ public class ComprobarErrores {
 			if (respuesta.startsWith("{\"POSLZ168OperationResponse")) {
 				if (respuesta.substring(0, respuesta.indexOf("imp_cuota_parm_prx_s"))
 						.equals(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("imp_cuota_parm_prx_s")))
-						&& respuesta.substring(respuesta.indexOf("imp_incremento_cap_prx_s"), respuesta.length())
+						&& respuesta.substring(respuesta.indexOf("imp_otro_concepto_prx_s"), respuesta.length())
 								.equals(respuestaAlmacenada.substring(
-										respuestaAlmacenada.indexOf("imp_incremento_cap_prx_s"),
+										respuestaAlmacenada.indexOf("imp_otro_concepto_prx_s"),
 										respuestaAlmacenada.length()))) {
 					return true;
 				}
@@ -1035,6 +1051,21 @@ public class ComprobarErrores {
 						&& respuesta.substring(respuesta.indexOf("audit_fec_alta_e"), respuesta.length())
 								.equals(respuestaAlmacenada.substring(respuestaAlmacenada.indexOf("audit_fec_alta_e"),
 										respuestaAlmacenada.length()))) {
+					return true;
+				}
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return false;
+	}
+	
+	public static boolean hayErrorPOSMZ142(String respuesta, String respuestaAlmacenada, long responseCode) {
+		try {
+			if (respuesta.startsWith("{\"POSMZ142OperationResponse")) {
+				if(respuesta.substring(0, respuesta.indexOf("fec_modif_pre_s")).equals(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("fec_modif_pre_s")))
+						&& respuesta.substring(respuesta.indexOf("imp_definitivo_pre_s"), respuesta.length())
+						.equals(respuestaAlmacenada.substring(respuestaAlmacenada.indexOf("imp_definitivo_pre_s"), respuestaAlmacenada.length()))) {
 					return true;
 				}
 			}
