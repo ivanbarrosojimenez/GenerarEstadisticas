@@ -839,18 +839,6 @@ public class ComprobarErrores {
 					return true;
 				}
 			}
-			/*else if (respuestaAlmacenada.startsWith("{\"POSAZ500OperationResponse")) {
-				if(respuesta.substring(0, respuesta.indexOf("rgsao500_reg")).equals(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("rgsao500_reg")))
-						&& respuesta.substring(respuesta.indexOf("rgsao500_errores"), respuesta.length())
-						.equals(respuestaAlmacenada.substring(respuestaAlmacenada.indexOf("rgsao500_errores"), respuestaAlmacenada.length()))) {
-					return true;
-				}
-			}*/
-			/*else if (respuestaAlmacenada.startsWith("{\"POSAZ524OperationResponse")) {
-				if(respuesta.substring(0, respuesta.indexOf("rgsao524s")).equals(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("rgsao524s")))) {
-					return true;
-				}
-			}*/
 			
 		} catch (Exception e) {
 			//System.out.println(e);

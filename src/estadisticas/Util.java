@@ -501,7 +501,7 @@ public class Util {
 		}		 
 		
 		 System.out.println();
-		if (respuestaAlmacenada.startsWith("{\"POSAZ618OperationResponse")) {
+		if (respuestaAlmacenada.startsWith("{\"POSLZ169OperationResponse")) {
 			System.out.println(respuesta);
 			System.out.println(respuestaAlmacenada);
 		}
