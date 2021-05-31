@@ -96,7 +96,7 @@ public class ComprobarErrores {
 	 * @return true si contiene error 504
 	 */
 	public static boolean hayErrorConversionB(String respuesta, String respuestaAlmacenada, long responseCode) {
-
+		
 		return (respuesta.contains("JSON to data transformation failed") && respuestaAlmacenada.contains("tipo_error\":\"B"));
 			
 
@@ -455,7 +455,7 @@ public class ComprobarErrores {
 	 * @return true si es valida
 	 */
 	public static boolean hayErrorPOSAZ611CaracterCod(String respuesta, String respuestaAlmacenada, long responseCode) {
-		if (respuesta.startsWith("{\"POSAZ611OperationResponse")) {
+//		if (respuesta.startsWith("{\"POSAZ611OperationResponse")) {
 			try {
 				// System.out.println(respuestaAlmacenada);
 				// System.out.println();
@@ -465,7 +465,7 @@ public class ComprobarErrores {
 				System.out.println(e);
 			}
 
-		}
+//		}
 		return false;
 	}
 	

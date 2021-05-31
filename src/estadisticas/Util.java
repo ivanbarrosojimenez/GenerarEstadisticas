@@ -56,7 +56,11 @@ public class Util {
 			}
 			
 			if (ComprobarErrores.hayErrorConversionB(respuesta, respuestaAlmacenada, responseCode)) {
-				return "error conversion vs B (Cambiar en parte front)[28887]";
+				if(respuesta.startsWith("{\"POSAZ130OperationResponse")) {
+					return "error conversion vs B (Cambiar en parte front)[28887]";
+				}
+				return "error conversion vs B [28887]";
+
 			}
 			
 			if (ComprobarErrores.hayErrorConversionD(respuesta, respuestaAlmacenada, responseCode)) {
@@ -248,7 +252,7 @@ public class Util {
 			}
 
 			if (ComprobarErrores.hayErrorPOSAZ611CaracterCod(respuesta, respuestaAlmacenada, responseCode)) {
-				return "Error caracter codificaci�n retorno[26963];26963";
+				return "Error caracter codificacion retorno[26963];26963";
 			}
 
 			if (ComprobarErrores.hayErrorCommunicationLink(respuesta, respuestaAlmacenada, responseCode)) {
@@ -259,9 +263,9 @@ public class Util {
 				return "TRIM EN VALOR[25497];25497";
 			}
 			
-			if (ComprobarErrores.hayErrorPOSAZ631Trim(respuesta, respuestaAlmacenada, responseCode)) {
-				return "TRIM EN VALOR[25497];25497";
-			}
+//			if (ComprobarErrores.hayErrorPOSAZ631Trim(respuesta, respuestaAlmacenada, responseCode)) {
+//				return "TRIM EN VALOR[25497];25497";
+//			}
 
 			// if(respuestaAlmacenada.replaceAll("��", "?").equals(respuesta)) {
 			// return "error codificaci�n �";
@@ -322,6 +326,57 @@ public class Util {
 				System.err.println(e);
 			}
 			
+			
+			/*** VALIDAR ORDEN DEL POSMZ143 Y TEXTO CURSOR*****/
+			if (respuestaAlmacenada.startsWith("{\"POSMZ143OperationResponse")) {
+				try {
+					System.out.println(respuesta.substring(1000, respuesta.length()));
+					char[] caracteresRespuesta = respuesta.substring(1000, respuesta.length()).replaceAll(" ", "").toCharArray();
+					List<Character> listaRespuesta = new ArrayList<Character>();
+					for (char c : caracteresRespuesta) {
+						listaRespuesta.add(c);
+					}
+					char[] caracteresRespuestaAlmacenada = respuestaAlmacenada.substring(1000, respuestaAlmacenada.length()).replaceAll(" ", "").toCharArray();
+					List<Character> listaRespuestaAlmacecnada = new ArrayList<Character>();
+					for (char c : caracteresRespuestaAlmacenada) {
+						listaRespuestaAlmacecnada.add(c);
+					}
+					Collections.sort(listaRespuesta);
+					Collections.sort(listaRespuestaAlmacecnada);
+
+//						System.out.println(listaRespuesta);
+//						System.out.println(listaRespuestaAlmacecnada);
+//						System.out.println("");
+
+					boolean diferente = false;
+					diferente = !(listaRespuesta.size() == listaRespuestaAlmacecnada.size());
+					if (listaRespuesta.size() > listaRespuestaAlmacecnada.size()) {
+						for (int i = 0; i < listaRespuesta.size() && i < listaRespuestaAlmacecnada.size()
+								&& !diferente; i++) {
+							if (!listaRespuesta.get(i).equals(listaRespuestaAlmacecnada.get(i))) {
+								diferente = true;
+							}
+
+						}
+
+					} else {
+						for (int i = 0; i < listaRespuesta.size() && i < listaRespuesta.size() && !diferente; i++) {
+							if (!listaRespuestaAlmacecnada.get(i).equals(listaRespuesta.get(i))) {
+								diferente = true;
+							}
+						}
+					}
+					if (!diferente) {
+						System.out.println("orden raro");
+						return ("Respuesta distinto orden y distinto error en parrafo [26959];26959");
+					}
+
+				} catch (Exception e) {
+					System.err.println(e);
+				}
+			}
+			
+			
 			try {
 				char[] caracteresRespuesta = respuesta.toCharArray();
 				List<Character> listaRespuesta = new ArrayList<Character>();
@@ -367,9 +422,7 @@ public class Util {
 				System.err.println(e);
 			}
 			
-			if (ComprobarErrores.hayErrorRlel(respuesta, respuestaAlmacenada, responseCode)) {
-				return "RLEL mainframe;;";
-			}	
+
 
 			if (respuestaAlmacenada.contains("Failure interacting with CICS")
 					&& !respuesta.contains("Failure interacting with CICS")) {
@@ -501,11 +554,85 @@ public class Util {
 		}		 
 		
 		 System.out.println();
-		if (respuestaAlmacenada.startsWith("{\"POSAZ618OperationResponse")) {
+		if (respuestaAlmacenada.startsWith("{\"POSAZ631OperationResponse")) {
+			try {
+				System.out.println(respuesta.substring(0, respuesta.indexOf("tbl_obser")+2124));
+				System.out.println(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("tbl_obser")+2124));
+				if(respuesta != null && respuesta.substring(0, respuesta.indexOf("tbl_obser")+2124).equals(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("tbl_obser")+2124))) {
+					System.out.println("Si");
+					System.out.println(respuesta.length());
+					System.out.println(respuestaAlmacenada.length());
+					System.out.println((respuesta.indexOf("\"tbl_obser\"")+2254));
+					System.out.println((respuestaAlmacenada.indexOf("\"tbl_obser\"")+2254));
+					String res = respuesta.substring(respuesta.indexOf("\"tbl_obser\"")+2254, respuesta.length());
+					String resA = respuestaAlmacenada.substring(respuestaAlmacenada.indexOf("\"tbl_obser\"")+2254, respuestaAlmacenada.length());
+					System.out.println(res);
+					System.out.println(resA);
+					if( res.equals(resA))
+						return "Sin error";
+					}
+					//siguiente revisar TRIM EN VALOR[25497]
+					System.out.println(respuesta);
+					System.out.println(respuestaAlmacenada);
+					System.out.println("");
+				
+					
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+			
+		}
+		if (respuestaAlmacenada.startsWith("{\"POSAZ611OperationResponse")) {
+			System.out.println();
+		}
+		
+		
+		//Validacion de orden en el POSLZ165
+		else if (respuestaAlmacenada.startsWith("{\"POSLZ165OperationResponse")) {
+			
+			try {
+				if(respuestaAlmacenada.contains("{\"tipo_error\":\"A\"}") && respuesta.contains("{\"tipo_error\":\"A\"}")) {
+					if(respuestaAlmacenada.contains("TIPO DE COLEGIADO NO PERMITIDO") && respuesta.contains("PROFESIONAL YA PERTENECE A LAVINIA")) {
+						return "error cambiar orden [31195];31195";
+					}
+				} else if(respuestaAlmacenada.contains("{\"tipo_error\":\"B\"}") && respuesta.contains("{\"tipo_error\":\"B\"}")) {
+					if(respuesta.substring(0, respuesta.indexOf("nro_prov_s")).equals(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("nro_prov_s")))) {
+						if(respuesta.substring(respuesta.indexOf("nif_prof_s"), respuesta.length()).equals(respuestaAlmacenada.substring(respuestaAlmacenada.indexOf("nif_prof_s"), respuestaAlmacenada.length()))) {
+							return "error cambiar orden [31195];31195";
+						}
+
+					
+					}
+				}
+			}
+			catch (Exception e) {
+				// TODO: handle exception
+			}
 			System.out.println(respuesta);
 			System.out.println(respuestaAlmacenada);
+			System.out.println();
 		}
 
+		
+		if(respuesta.contains("Invalid numeric value")) {
+			System.out.println(respuesta);
+			System.out.println(respuestaAlmacenada);
+			if(respuestaAlmacenada.contains("abended")){
+				return "Sin error";
+			} else {
+				return "error corta llamada invalid numeric[31180];[31180]";
+			}
+		}
+		
+		if (respuestaAlmacenada.startsWith("{\"POSMZ143OperationResponse")) {
+			
+		}
+		
+		if (ComprobarErrores.hayErrorRlel(respuesta, respuestaAlmacenada, responseCode)) {
+			return "RLEL mainframe;;";
+		}	
+
+		
 		return "Error sin detectar";
 		// TODO PARCHE FECHA PROCESO PARA 631 fec_ult_proceso_s
 	}
