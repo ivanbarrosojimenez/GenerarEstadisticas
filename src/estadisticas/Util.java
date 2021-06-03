@@ -18,7 +18,7 @@ public class Util {
 	 * @param responseCode
 	 * @return tipo de error localizado
 	 * @throws IOException 
-	 */
+	 */ 
 	protected static String obtenerTipoDeError(String respuesta, String respuestaAlmacenada, Long responseCode) throws IOException {
 		try {
 			// AL INICIO SE DEBEN PONER LOS ERRORES NO SOLUCIONADOS PARA OBTENER MEJOR
@@ -548,10 +548,7 @@ public class Util {
 			if (ComprobarErrores.hayError180(respuesta, respuestaAlmacenada, responseCode)) {
 				return "error 180[XXXXX];XXXXX";
 			}
-		} catch (Exception e) {
-			System.err.println(e);
-			e.printStackTrace();
-		}		 
+			 
 		
 		 System.out.println();
 		if (respuestaAlmacenada.startsWith("{\"POSAZ631OperationResponse")) {
@@ -608,6 +605,9 @@ public class Util {
 			catch (Exception e) {
 				// TODO: handle exception
 			}
+		}
+
+		if (respuestaAlmacenada.startsWith("{\"POSLZ169OperationResponse")) {
 			System.out.println(respuesta);
 			System.out.println(respuestaAlmacenada);
 			System.out.println();
@@ -625,14 +625,39 @@ public class Util {
 		}
 		
 		if (respuestaAlmacenada.startsWith("{\"POSMZ143OperationResponse")) {
-			
+			System.out.println(respuesta.substring(respuesta.length()-200, respuesta.length()));
+			if(respuesta.contains("") || respuesta.contains("48200")) {
+				return "error codificación 143";
+			}
 		}
 		
+		
+		if (respuestaAlmacenada.startsWith("{\"POSMZ150OperationResponse")) {
+			System.out.println(respuesta.substring(0, respuesta.length()-2300));
+			System.out.println(respuestaAlmacenada.substring(0, respuestaAlmacenada.length()-2300));
+			System.out.println();
+
+			if(respuesta.substring(0, respuesta.length()-2300).equals(respuestaAlmacenada.substring(respuestaAlmacenada.length()-2300))){
+				return "error volcado datos[];";
+			}
+		}
+
 		if (ComprobarErrores.hayErrorRlel(respuesta, respuestaAlmacenada, responseCode)) {
 			return "RLEL mainframe;;";
 		}	
 
-		
+		} catch (Exception e) {
+			System.err.println(e);
+			e.printStackTrace();
+		}	
+		if (respuestaAlmacenada.startsWith("{\"POSAZ560OperationResponse") || respuestaAlmacenada.startsWith("{\"POSAZ535OperationResponse")) {
+			System.out.println(respuesta);
+			System.out.println(respuestaAlmacenada);
+			System.out.println();
+			return "Respuesta distinto orden / TRIM VALOR  [26959][25497];26959-25497";
+		}
+
+	
 		return "Error sin detectar";
 		// TODO PARCHE FECHA PROCESO PARA 631 fec_ult_proceso_s
 	}

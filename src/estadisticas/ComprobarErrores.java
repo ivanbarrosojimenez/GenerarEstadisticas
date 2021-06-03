@@ -294,6 +294,12 @@ public class ComprobarErrores {
 	 * @return true si contiene la cadena
 	 */
 	public static boolean hayError969(String respuesta, String respuestaAlmacenada, long responseCode) {
+		if(respuesta.contains(" -969")) {
+			System.out.println(respuesta);
+			System.out.println(respuesta.substring(0,500));
+
+			System.out.println();
+		}
 		return (respuesta.contains(" -969"));
 	}
 	
@@ -406,7 +412,8 @@ public class ComprobarErrores {
 	 */
 	public static boolean hayErrorPOSAZ631(String respuesta, String respuestaAlmacenada, long responseCode) {
 		if (respuesta.startsWith("{\"POSAZ631OperationResponse")) {
-			/**Esta parte valida la fecha de modificacion tambien
+			System.out.println();
+			//Esta parte valida la fecha de modificacion tambien
 			String respuestaSinFechas = respuesta
 					.replace(respuesta.substring(respuesta.indexOf("fec_ult_proceso_s"),
 							respuesta.indexOf("fec_ult_proceso_s") + 39), "")
@@ -421,26 +428,8 @@ public class ComprobarErrores {
 			// System.out.println(respuestaSinFechas);
 			// System.out.println(respuestaAlmacenadaSinFechas);
 			// System.out.println(respuestaSinFechas.equals(respuestaAlmacenadaSinFechas));
-			
-	*/
-			//Validar sin tener en cuenta la parte dinamica, la fecha ultimo proceso
-			
-//			if(!(respuesta.substring(0, 2461).equals(respuestaAlmacenada.substring(0, 2461)) && 
-//					respuesta.substring(2511).equals(respuestaAlmacenada.substring(2511)))) {
-//				System.out.println(respuesta.substring(0, 2461));
-//				System.out.println(respuestaAlmacenada.substring(0, 2461));
-//				System.out.println(respuesta.substring(2511));
-//				System.out.println(respuestaAlmacenada.substring(2511));
-//				System.out.println(respuesta);
-//				System.out.println(respuestaAlmacenada);
-//
-//				System.out.println();
-//			}
-			return(respuesta.substring(0, 2461).equals(respuestaAlmacenada.substring(0, 2461)) && 
-					respuesta.substring(2511).equals(respuestaAlmacenada.substring(2511)));
-			
-//			System.out.println(respuestaSinFechas.equals(respuestaAlmacenadaSinFechas));
-//			return respuestaSinFechas.equals(respuestaAlmacenadaSinFechas);
+
+			return respuestaSinFechas.equals(respuestaAlmacenadaSinFechas);
 		}
 		return false;
 	}
@@ -608,8 +597,8 @@ public class ComprobarErrores {
 					else {
 //						System.out.println(cadenaRai.substring(indiceActual, indiceFinActual));
 //						System.out.println(cadenaMai.substring(indiceActual, indiceFinActual));
-//						System.out.println(cadenaRai);
-//						System.out.println(cadenaMai);
+						System.out.println(cadenaRai);
+						System.out.println(cadenaMai);
 						if(!cadenaRai.substring(indiceActual, indiceFinActual).equals(cadenaMai.substring(indiceActual, indiceFinActual))) {
 							return true;
 						}
@@ -834,23 +823,11 @@ public class ComprobarErrores {
 					return true;
 				}
 			}
-			else if (respuestaAlmacenada.startsWith("{\"POSLZ169OperationResponse")) {
-				if(respuesta.substring(0, respuesta.indexOf("ind_fin_datos_s")).equals(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("ind_fin_datos_s")))) {
-					return true;
-				}
-			}
-			/*else if (respuestaAlmacenada.startsWith("{\"POSAZ500OperationResponse")) {
-				if(respuesta.substring(0, respuesta.indexOf("rgsao500_reg")).equals(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("rgsao500_reg")))
-						&& respuesta.substring(respuesta.indexOf("rgsao500_errores"), respuesta.length())
-						.equals(respuestaAlmacenada.substring(respuestaAlmacenada.indexOf("rgsao500_errores"), respuestaAlmacenada.length()))) {
-					return true;
-				}
-			}*/
-			/*else if (respuestaAlmacenada.startsWith("{\"POSAZ524OperationResponse")) {
-				if(respuesta.substring(0, respuesta.indexOf("rgsao524s")).equals(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("rgsao524s")))) {
-					return true;
-				}
-			}*/
+//			else if (respuestaAlmacenada.startsWith("{\"POSLZ169OperationResponse")) {
+//				if(respuesta.substring(0, respuesta.indexOf("ind_fin_datos_s")).equals(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("ind_fin_datos_s")))) {
+//					return true;
+//				}
+//			}
 			
 		} catch (Exception e) {
 			//System.out.println(e);
