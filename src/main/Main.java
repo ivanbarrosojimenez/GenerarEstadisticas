@@ -49,7 +49,7 @@ public class Main {
     /** * * * * * * * * * * * * * * * * * * * * * * * * * * */
     /** - - - - - MODIFICAR SOLO ESTO - - - - -*/
 	static int numFasesCrear = 9;//Si se quiere ejecutar solo una fase cambiar tambien donde pone carpeta con el mismo numero (L67)
-	static String tipoResultado = "Db2"; //poner SQL o Db2 o Iaa;
+	static String tipoResultado = "Iaa"; //poner SQL o Db2 o Iaa;
 	static boolean comprimirYEliminar = false;
 	static String tipo = "resultados";//tiempos o resultados
 	/**  - - - FIN MODIFICAR SOLO ESTO - - - - -  */

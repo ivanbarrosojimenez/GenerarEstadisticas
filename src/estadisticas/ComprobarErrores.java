@@ -618,6 +618,99 @@ public class ComprobarErrores {
 	
 	}
 	
+	
+	/**
+	 * Comprueba si la respuesta puede contener un error de diferencia en occurs
+	 * @param respuesta
+	 * @param respuestaAlmacenada
+	 * @param codigoRetorno
+	 * @return true si contiene la cadena
+	 */
+	public static boolean validar611(String respuesta, String respuestaAlmacenada, long responseCode) {
+		if (respuestaAlmacenada.startsWith("{\"POSAZ611OperationResponse")) {
+			
+			
+
+			int maxTamanio = respuesta.length();
+			int indiceActual = 0;
+			int indiceFinActual = 0;
+			
+			String cadenaSinFechasMai = "";
+			String cadenaSinFechasRai = "";
+			String cadenaRai = respuesta;//.replace(" ", "");
+			String cadenaMai = respuestaAlmacenada;//.replace(" ", "");
+			
+			String cadenaReferenciaR = cadenaRai;
+			String cadenaReferenciaM = cadenaRai;
+			
+			//Nos quedamos con la primera parte, desde la 0 hasta el tms log primero
+			
+			indiceFinActual = cadenaReferenciaR.indexOf("tms_log_s")+8;
+			cadenaSinFechasMai+= cadenaMai.substring(0, indiceFinActual);
+			cadenaSinFechasRai+= cadenaRai.substring(0, indiceFinActual);
+			
+			cadenaReferenciaR = cadenaRai.substring(indiceFinActual);
+			cadenaReferenciaM = cadenaMai.substring(indiceFinActual);
+			
+			indiceActual = indiceFinActual;
+			
+			while(indiceActual < maxTamanio) {
+				System.out.println(cadenaReferenciaR.length());
+				System.out.println(cadenaReferenciaM.length());
+				
+				try {
+					if(indiceActual == -1) {
+						indiceActual = maxTamanio;
+						return false;
+					}
+					else {
+						indiceFinActual += cadenaReferenciaR.indexOf("tms_log_s");
+						indiceActual += cadenaReferenciaR.indexOf("usuario_s");
+
+						
+						System.out.println(cadenaMai.substring(indiceActual, indiceFinActual));
+						System.out.println(cadenaRai.substring(indiceActual, indiceFinActual));
+
+						
+						
+						cadenaReferenciaR = cadenaRai.substring(indiceFinActual);
+						cadenaReferenciaM = cadenaMai.substring(indiceFinActual);
+		
+						cadenaSinFechasMai += cadenaMai.substring(indiceActual, indiceFinActual);
+						cadenaSinFechasRai += cadenaRai.substring(indiceActual, indiceFinActual);
+						
+						System.out.println(cadenaSinFechasMai);
+						System.out.println(cadenaSinFechasRai);
+						
+						
+						System.out.println(indiceActual);
+						System.out.println(indiceFinActual);
+
+//						System.out.println(cadenaRai);
+//						System.out.println(cadenaMai);
+//						if(!cadenaRai.substring(indiceActual, indiceFinActual).equals(cadenaMai.substring(indiceActual, indiceFinActual))) {
+//							return true;
+//						}
+					}
+						
+//					cadenaReferenciaR = cadenaRai.substring(indiceFinActual);
+//					cadenaReferenciaM = cadenaRai.substring(indiceFinActual);
+
+				} catch (Exception e) {
+					System.out.println("error");
+					//return false;
+					indiceActual = maxTamanio+1;
+				}
+				
+			}
+			System.out.println(cadenaSinFechasMai);
+			System.out.println(cadenaSinFechasRai);
+			return cadenaSinFechasMai.equals(cadenaSinFechasRai) && cadenaSinFechasMai.length() != 0;
+		} 
+		return false;
+	
+	}
+	
 	/**
 	 * Comprueba si la respuesta contiene cambio en auditusuario
 	 * @param respuesta

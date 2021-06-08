@@ -26,6 +26,10 @@ public class Util {
 			if(respuesta.startsWith("{\"POSAZ500OperationResponse")) {
 				System.out.println();
 			}
+			
+			if(respuesta.contains(" \"message\": \"Resource not found\"")) {
+				return "error 404 [31648];31648)";
+			}
 			if (ComprobarErrores.hayError29226(respuesta, respuestaAlmacenada, responseCode)) {
 				return "error [29226];29226";
 			}
@@ -260,8 +264,18 @@ public class Util {
 			}
 
 			if (respuesta.replaceAll(" ", "").equals(respuestaAlmacenada.replaceAll(" ", ""))) {
+				System.out.println(respuesta);
+				System.out.println(respuestaAlmacenada);
 				return "TRIM EN VALOR[25497];25497";
 			}
+			
+			if (ComprobarErrores.validar611(respuesta, respuestaAlmacenada, responseCode)) {
+				System.out.println(respuesta);
+				System.out.println(respuestaAlmacenada);
+				return "Sin error fecha dinamica";
+			}
+			
+			
 			
 //			if (ComprobarErrores.hayErrorPOSAZ631Trim(respuesta, respuestaAlmacenada, responseCode)) {
 //				return "TRIM EN VALOR[25497];25497";
@@ -650,11 +664,25 @@ public class Util {
 			System.err.println(e);
 			e.printStackTrace();
 		}	
-		if (respuestaAlmacenada.startsWith("{\"POSAZ560OperationResponse") || respuestaAlmacenada.startsWith("{\"POSAZ535OperationResponse")) {
+		if (respuesta.startsWith("{\"POSAZ560OperationResponse") || respuesta.startsWith("{\"POSAZ535OperationResponse") || respuesta.startsWith("{\"POSAZ508OperationResponse") || respuesta.startsWith("{\"POSAZ524OperationResponse")) {
+//			System.out.println(respuesta);
+//			System.out.println(respuestaAlmacenada);
+			return "Respuesta distinto orden / TRIM VALOR  [26959][25497];26959-25497";
+		}
+		
+		if (respuestaAlmacenada.startsWith("{\"POSAZ508OperationResponse") ) {
+//			System.out.println(respuesta);
+//			System.out.println(respuestaAlmacenada);
+			return "Respuesta distinto orden / TRIM VALOR  [26959][25497];26959-25497";
+		}
+		
+		if ( respuesta.startsWith("{\"POSAZ527OperationResponse")) {
 			System.out.println(respuesta);
 			System.out.println(respuestaAlmacenada);
 			System.out.println();
-			return "Respuesta distinto orden / TRIM VALOR  [26959][25497];26959-25497";
+
+			//return "Respuesta distinto orden / TRIM VALOR  [26959][25497];26959-25497";
+
 		}
 
 	
