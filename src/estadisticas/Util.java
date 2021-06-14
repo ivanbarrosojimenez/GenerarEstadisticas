@@ -23,13 +23,27 @@ public class Util {
 		try {
 			// AL INICIO SE DEBEN PONER LOS ERRORES NO SOLUCIONADOS PARA OBTENER MEJOR
 			// RENDIMIENTO.
-			if(respuesta.startsWith("{\"POSAZ500OperationResponse")) {
+			if(respuesta.startsWith("{\"POSLZ169OperationResponse")) {
+				System.out.println(respuesta);
+				System.out.println(respuestaAlmacenada);
 				System.out.println();
+
+			}
+			
+			
+			if(respuesta.contains("Internal server error")) {
+				return "error 500 [31781];31781)";
+			}
+			
+			if(respuestaAlmacenada.contains("Internal server error")) {
+				return "error 500 mainframe";
 			}
 			
 			if(respuesta.contains(" \"message\": \"Resource not found\"")) {
 				return "error 404 [31648];31648)";
 			}
+			
+			
 			if (ComprobarErrores.hayError29226(respuesta, respuestaAlmacenada, responseCode)) {
 				return "error [29226];29226";
 			}
@@ -621,7 +635,7 @@ public class Util {
 			}
 		}
 
-		if (respuestaAlmacenada.startsWith("{\"POSLZ169OperationResponse")) {
+		if (respuestaAlmacenada.startsWith("{\"POSAZ536OperationResponse")) {
 			System.out.println(respuesta);
 			System.out.println(respuestaAlmacenada);
 			System.out.println();
