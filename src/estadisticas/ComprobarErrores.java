@@ -811,6 +811,11 @@ public class ComprobarErrores {
 					return true;
 				}
 			}
+			else if (respuestaAlmacenada.startsWith("{\"POSAZ544OperationResponse")) {
+				if(respuesta.substring(0, respuesta.indexOf("elem_tsprofac")).equals(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("elem_tsprofac")))) {					
+					return true;
+				}
+			}			
 		} catch (Exception e) {
 			System.out.println(e);
 		}
@@ -1136,6 +1141,45 @@ public class ComprobarErrores {
 				if(respuesta.substring(0, respuesta.indexOf("fec_modif_pre_s")).equals(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("fec_modif_pre_s")))
 						&& respuesta.substring(respuesta.indexOf("imp_definitivo_pre_s"), respuesta.length())
 						.equals(respuestaAlmacenada.substring(respuestaAlmacenada.indexOf("imp_definitivo_pre_s"), respuestaAlmacenada.length()))) {
+					return true;
+				}
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return false;
+	}
+	
+	public static boolean hayErrorPOSAZ500(String respuesta, String respuestaAlmacenada, long responseCode) {
+		try {
+			if (respuesta.startsWith("{\"POSAZ500OperationResponse")) {
+				if(respuesta.substring(0, respuesta.indexOf("rgsao500_reg")).equals(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("rgsao500_reg")))) {
+					return true;
+				}
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return false;
+	}
+	
+	public static boolean hayErrorPOSAZ517(String respuesta, String respuestaAlmacenada, long responseCode) {
+		try {
+			if (respuesta.startsWith("{\"POSAZ517OperationResponse")) {
+				if(respuesta.substring(0, respuesta.indexOf("datos_terminales")).equals(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("datos_terminales")))) {
+					return true;
+				}
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return false;
+	}
+	
+	public static boolean hayErrorPOSAZ585(String respuesta, String respuestaAlmacenada, long responseCode) {
+		try {
+			if (respuesta.startsWith("{\"POSAZ585OperationResponse")) {
+				if(respuesta.substring(respuesta.indexOf("inicio_fin"), respuesta.length()).equals(respuestaAlmacenada.substring(respuestaAlmacenada.indexOf("inicio_fin"), respuestaAlmacenada.length()))) {
 					return true;
 				}
 			}

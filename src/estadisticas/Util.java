@@ -276,6 +276,18 @@ public class Util {
 			if (ComprobarErrores.hayErrorPOSMZ142(respuesta, respuestaAlmacenada, responseCode)) {
 				return "Sin error, parte dinamica en respuesta";
 			}
+			
+			if (ComprobarErrores.hayErrorPOSAZ500(respuesta, respuestaAlmacenada, responseCode)) {
+				return "Sin error, parte dinamica en respuesta";
+			}
+			
+			if (ComprobarErrores.hayErrorPOSAZ517(respuesta, respuestaAlmacenada, responseCode)) {
+				return "Sin error, parte dinamica en respuesta";
+			}
+			
+			if (ComprobarErrores.hayErrorPOSAZ585(respuesta, respuestaAlmacenada, responseCode)) {
+				return "Sin error, parte dinamica en respuesta";
+			}
 
 			if (ComprobarErrores.hayErrorPOSAZ611CaracterCod(respuesta, respuestaAlmacenada, responseCode)) {
 				return "Error caracter codificacion retorno[26963];26963";
@@ -696,7 +708,7 @@ public class Util {
 			return "Respuesta distinto orden / TRIM VALOR  [26959][25497];26959-25497";
 		}
 		
-		if ( respuesta.startsWith("{\"POSAZ527OperationResponse")) {
+		if ( respuesta.startsWith("{\"POSAZ585OperationResponse")) {
 			System.out.println(respuesta);
 			System.out.println(respuestaAlmacenada);
 			System.out.println();
