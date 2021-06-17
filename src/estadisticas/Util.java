@@ -33,6 +33,12 @@ public class Util {
 				return "RLEL mainframe - optimizar cursores;;";
 			}	
 			
+			
+			if (respuesta.contains("000803") && !respuestaAlmacenada.contains("000803")) {
+				return "Error Error 803 vs error ok[31890];31890";
+			}	
+			
+			
 			if(respuesta.contains("Internal server error")) {
 				return "error 500 [31781];31781)";
 			}
