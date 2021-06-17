@@ -165,6 +165,17 @@ public class ComprobarErrores {
 	}
 	
 	/**
+	 * Comprueba si la respuesta tiene un codigo 180 en la respuesta
+	 * @param respuesta
+	 * @param respuestaAlmacenada
+	 * @param codigoRetorno
+	 * @return true si contiene error 180
+	 */
+	public static boolean hayError180Ambas(String respuesta, String respuestaAlmacenada, long responseCode) {
+		return(respuesta.contains(" -180") && respuestaAlmacenada.contains(" -180"));
+	}
+	
+	/**
 	 * Comprueba si la respuesta tiene un codigo 503
 	 * @param respuesta
 	 * @param respuestaAlmacenada

@@ -593,7 +593,8 @@ public class Util {
 				}
 			}
 			
-			if (ComprobarErrores.hayError180(respuesta, respuestaAlmacenada, responseCode)) {
+			if (ComprobarErrores.hayError180(respuesta, respuestaAlmacenada, responseCode)
+					|| ComprobarErrores.hayError180Ambas(respuesta, respuestaAlmacenada, responseCode)) {
 				return "error 180[XXXXX];XXXXX";
 			}
 			 
