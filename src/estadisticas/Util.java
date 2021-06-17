@@ -29,7 +29,9 @@ public class Util {
 				System.out.println();
 
 			}
-			
+			if (ComprobarErrores.hayErrorRlel(respuesta, respuestaAlmacenada, responseCode)) {
+				return "RLEL mainframe - optimizar cursores;;";
+			}	
 			
 			if(respuesta.contains("Internal server error")) {
 				return "error 500 [31781];31781)";
@@ -607,9 +609,9 @@ public class Util {
 			}
 			
 		}
-		if (respuestaAlmacenada.startsWith("{\"POSAZ611OperationResponse")) {
-			System.out.println();
-		}
+//		if (respuestaAlmacenada.startsWith("{\"POSAZ611OperationResponse")) {
+//			System.out.println();
+//		}
 		
 		
 		//Validacion de orden en el POSLZ165
@@ -635,7 +637,7 @@ public class Util {
 			}
 		}
 
-		if (respuestaAlmacenada.startsWith("{\"POSAZ536OperationResponse")) {
+		if (respuestaAlmacenada.startsWith("{\"POSAZ630OperationResponse")) {
 			System.out.println(respuesta);
 			System.out.println(respuestaAlmacenada);
 			System.out.println();
@@ -660,7 +662,7 @@ public class Util {
 		}
 		
 		
-		if (respuestaAlmacenada.startsWith("{\"POSMZ150OperationResponse")) {
+		if (respuestaAlmacenada.startsWith("{\"POSAZ630OperationResponse")) {
 			System.out.println(respuesta.substring(0, respuesta.length()-2300));
 			System.out.println(respuestaAlmacenada.substring(0, respuestaAlmacenada.length()-2300));
 			System.out.println();
@@ -670,9 +672,7 @@ public class Util {
 			}
 		}
 
-		if (ComprobarErrores.hayErrorRlel(respuesta, respuestaAlmacenada, responseCode)) {
-			return "RLEL mainframe;;";
-		}	
+
 
 		} catch (Exception e) {
 			System.err.println(e);
