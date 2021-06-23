@@ -165,17 +165,6 @@ public class ComprobarErrores {
 	}
 	
 	/**
-	 * Comprueba si la respuesta tiene un codigo 180 en la respuesta
-	 * @param respuesta
-	 * @param respuestaAlmacenada
-	 * @param codigoRetorno
-	 * @return true si contiene error 180
-	 */
-	public static boolean hayError180Ambas(String respuesta, String respuestaAlmacenada, long responseCode) {
-		return(respuesta.contains(" -180") && respuestaAlmacenada.contains(" -180"));
-	}
-	
-	/**
 	 * Comprueba si la respuesta tiene un codigo 503
 	 * @param respuesta
 	 * @param respuestaAlmacenada
@@ -369,6 +358,19 @@ public class ComprobarErrores {
 		if(respuesta.contains("ExecuteNonQuery")) return false;
 		return (respuestaAlmacenada.contains("RLEL"));
 	}
+	
+	/**
+	 * Comprueba si la respuesta contiene la cadena  RLEL
+	 * @param respuesta
+	 * @param respuestaAlmacenada
+	 * @param codigoRetorno
+	 * @return true si contiene la cadena
+	 */
+	public static boolean hayErrorRlcp(String respuesta, String respuestaAlmacenada, long responseCode) {
+		if(respuesta.contains("ExecuteNonQuery")) return false;
+		return (respuestaAlmacenada.contains("RLCP"));
+	}
+	
 	
 	/**
 	 * Comprueba si la respuesta contiene la cadena  Could not load module
@@ -822,11 +824,6 @@ public class ComprobarErrores {
 					return true;
 				}
 			}
-			else if (respuestaAlmacenada.startsWith("{\"POSAZ544OperationResponse")) {
-				if(respuesta.substring(0, respuesta.indexOf("elem_tsprofac")).equals(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("elem_tsprofac")))) {					
-					return true;
-				}
-			}			
 		} catch (Exception e) {
 			System.out.println(e);
 		}
@@ -1160,7 +1157,7 @@ public class ComprobarErrores {
 		}
 		return false;
 	}
-	
+
 	public static boolean hayErrorPOSAZ500(String respuesta, String respuestaAlmacenada, long responseCode) {
 		try {
 			if (respuesta.startsWith("{\"POSAZ500OperationResponse")) {
@@ -1212,7 +1209,7 @@ public class ComprobarErrores {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Comprueba si la respuesta contiene cambio en auditusuario
 	 * @param respuesta
