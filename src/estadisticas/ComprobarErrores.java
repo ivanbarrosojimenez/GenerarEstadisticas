@@ -1200,6 +1200,19 @@ public class ComprobarErrores {
 		return false;
 	}
 	
+	public static boolean hayErrorPOSAZ502(String respuesta, String respuestaAlmacenada, long responseCode) {
+		try {
+			if (respuesta.startsWith("{\"POSAZ502OperationResponse")) {
+				if(respuesta.substring(0, respuesta.indexOf("con_tot_consu_s")).equals(respuestaAlmacenada.substring(0, respuestaAlmacenada.indexOf("con_tot_consu_s")))) {
+					return true;
+				}
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return false;
+	}
+	
 	/**
 	 * Comprueba si la respuesta contiene cambio en auditusuario
 	 * @param respuesta
