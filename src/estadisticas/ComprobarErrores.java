@@ -360,6 +360,19 @@ public class ComprobarErrores {
 	}
 	
 	/**
+	 * Comprueba si la respuesta contiene la cadena  RLEL
+	 * @param respuesta
+	 * @param respuestaAlmacenada
+	 * @param codigoRetorno
+	 * @return true si contiene la cadena
+	 */
+	public static boolean hayErrorRlcp(String respuesta, String respuestaAlmacenada, long responseCode) {
+		if(respuesta.contains("ExecuteNonQuery")) return false;
+		return (respuestaAlmacenada.contains("RLCP"));
+	}
+	
+	
+	/**
 	 * Comprueba si la respuesta contiene la cadena  Could not load module
 	 * @param respuesta
 	 * @param respuestaAlmacenada

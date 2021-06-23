@@ -33,8 +33,18 @@ public class Util {
 				return "RLEL mainframe - optimizar cursores;;";
 			}	
 			
+			if (ComprobarErrores.hayErrorRlcp(respuesta, respuestaAlmacenada, responseCode)) {
+				return "RLCP mainframe - modificar cobol;;";
+			}	
+			
+			
 			
 			if (respuesta.contains("000803") && !respuestaAlmacenada.contains("000803")) {
+				if(respuesta.contains("POSAZ503OperationResponse")){
+					System.out.println(respuesta);
+					System.out.println(respuestaAlmacenada);
+					System.out.println();
+				}
 				return "Error Error 803 vs error ok[31890];31890";
 			}	
 			
