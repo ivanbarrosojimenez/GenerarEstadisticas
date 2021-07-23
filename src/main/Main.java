@@ -48,7 +48,7 @@ public class Main {
 //    static String NOMBRE_FICHERO_ENTRADA_2_5 = "host6.json";
     /** * * * * * * * * * * * * * * * * * * * * * * * * * * */
     /** - - - - - MODIFICAR SOLO ESTO - - - - -*/
-	static int numFasesCrear = 60;//Si se quiere ejecutar solo una fase cambiar tambien donde pone carpeta con el mismo numero (L67)
+	static int numFasesCrear = 9;//Si se quiere ejecutar solo una fase cambiar tambien donde pone carpeta con el mismo numero (L67)
 	static String tipoResultado = "Iaa"; //poner SQL o Db2 o Iaa;
 	static boolean comprimirYEliminar = false;
 	static String tipo = "resultados";//tiempos o resultados
@@ -68,7 +68,7 @@ public class Main {
         grabarFichero.crearFichero("salida/"+tipo + NOMBRE_FICHERO_SALIDA_FILTRADO, true);
 
 
-        for(int fase = 0, carpeta = 60; carpeta <= numFasesCrear; fase++,carpeta++) {
+        for(int fase = 0, carpeta = 1; carpeta <= numFasesCrear; fase++,carpeta++) {
         	
         	String nombreCarpetaFase ="F"+carpeta+"resultados"+tipoResultado; 
         	File files[] = (new File(nombreCarpetaFase+"/")).listFiles(filtro);

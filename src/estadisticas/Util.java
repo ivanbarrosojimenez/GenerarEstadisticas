@@ -21,6 +21,35 @@ public class Util {
 	 */ 
 	protected static String obtenerTipoDeError(String respuesta, String respuestaAlmacenada, Long responseCode) throws IOException {
 		try {
+			if(respuestaAlmacenada.startsWith("{\"POSAZ130OperationResponse")) {
+				return "Sin error, se quita de resultados-estadísticas";
+			}
+			if(respuesta.startsWith("{\"POSLZ170OperationResponse")) {
+				return "Sin error, se quita de resultados-estadísticas";
+			}	
+			if(respuestaAlmacenada.startsWith("{\"POSAZ508OperationResponse")) {
+				return "Sin error, se quita de resultados-estadísticas";
+			}
+			if (respuestaAlmacenada.startsWith("{\"POSAZ535OperationResponse")) {
+				return "Sin error, se quita de resultados-estadísticas";				
+			}
+			if (respuestaAlmacenada.startsWith("{\"POSAZ592OperationResponse") && respuestaAlmacenada.contains("-180")) {
+				return "Sin error, se quita de resultados-estadísticas";
+			}
+			/*if (respuestaAlmacenada.contains("\\//")) {
+				// TODO TRATAMIENTO SACAR PATRON
+
+				return "error backslash doble;25490";
+			} else if (respuesta.equals("undefined")) {
+				// TODO TRATAMIENTO SACAR PATRON
+				return "error respuesta vacia;";
+			} else if (respuestaAlmacenada.contains("\\/")) {
+				System.err.println(respuestaAlmacenada);
+				System.err.println(respuesta);
+
+				return "error backslash simple;25490";
+			}*/
+			
 			// AL INICIO SE DEBEN PONER LOS ERRORES NO SOLUCIONADOS PARA OBTENER MEJOR
 			// RENDIMIENTO.
 			if(respuesta.startsWith("{\"POSLZ169OperationResponse")) {
@@ -28,7 +57,8 @@ public class Util {
 				System.out.println(respuestaAlmacenada);
 				System.out.println();
 
-			}
+			}			
+			
 			if (ComprobarErrores.hayErrorRlel(respuesta, respuestaAlmacenada, responseCode)) {
 				return "RLEL mainframe - optimizar cursores;;";
 			}	
@@ -91,7 +121,8 @@ public class Util {
 				return "error conversion vs A[28887];28887";
 			}
 			
-			if (ComprobarErrores.hayErrorConversionB(respuesta, respuestaAlmacenada, responseCode)) {
+			if (ComprobarErrores.hayErrorConversionB(respuesta, respuestaAlmacenada, responseCode)
+					&& !respuestaAlmacenada.startsWith("{\"POSAZ130OperationResponse")) {
 				if(respuesta.startsWith("{\"POSAZ130OperationResponse")) {
 					return "error conversion vs B (Cambiar en parte front)[28887]";
 				}
@@ -302,13 +333,29 @@ public class Util {
 			if (ComprobarErrores.hayErrorPOSAZ502(respuesta, respuestaAlmacenada, responseCode)) {
 				return "Sin error, parte dinamica en respuesta";
 			}
+			
+			if (ComprobarErrores.hayErrorPOSAZ597(respuesta, respuestaAlmacenada, responseCode)) {
+				return "Sin error, parte dinamica en respuesta";
+			}
+			
+			if (ComprobarErrores.hayErrorPOSAZ604(respuesta, respuestaAlmacenada, responseCode)) {
+				return "Sin error, parte dinamica en respuesta";
+			}
+			
+			if (ComprobarErrores.hayErrorPOSAZ521(respuesta, respuestaAlmacenada, responseCode)) {
+				return "Sin error, distinto usuario identificacion servicio";
+			}
 
 			if (ComprobarErrores.hayErrorPOSAZ611CaracterCod(respuesta, respuestaAlmacenada, responseCode)) {
 				return "Error caracter codificacion retorno[26963];26963";
-			}
+			}			
 
 			if (ComprobarErrores.hayErrorCommunicationLink(respuesta, respuestaAlmacenada, responseCode)) {
 				return "Communication link failure[26030];26030";
+			}
+			
+			if (ComprobarErrores.hayError33713(respuesta, respuestaAlmacenada, responseCode)) {
+				return "Error Respuesta con codificación extraña[33713]";
 			}
 
 			if (respuesta.replaceAll(" ", "").equals(respuestaAlmacenada.replaceAll(" ", ""))) {
@@ -379,7 +426,7 @@ public class Util {
 						}
 					}
 				}
-				if (!diferente) {
+				if (!diferente && !respuestaAlmacenada.startsWith("{\"POSAZ508OperationResponse")) {
 					System.out.println("orden raro");
 					return ("Respuesta distinto orden / TRIM VALOR  [26959][25497];26959-25497");
 				}
@@ -477,7 +524,9 @@ public class Util {
 				}
 				if (!diferente) {
 					System.out.println("orden raro");
-					return ("Respuesta con distinto orden[26959];26959");
+					if (!respuestaAlmacenada.startsWith("{\"POSAZ508OperationResponse")) {
+						return ("Respuesta con distinto orden[26959];26959");	
+					}					
 				}
 
 			} catch (Exception e) {
@@ -493,8 +542,9 @@ public class Util {
 				} else if(responseCode == 502) {
 					return "XML 502[27997];27997";
 				} else if(respuesta.contains("OperationResponse") && respuestaAlmacenada.contains("abended 'ASRA'")){
-
-					return "abend ASRA vs error A [27999];27999";
+					if (!respuesta.startsWith("{\"POSLZ170OperationResponse") ) {
+						return "abend ASRA vs error A [27999];27999";	
+					}					
 				} else {
 //					System.out.println(respuestaAlmacenada);
 //					System.out.println(respuesta.substring(0, 1000));
@@ -578,27 +628,16 @@ public class Util {
 			}
 			
 
-			// fin de comprobar caracteres raros
+			// fin de comprobar caracteres raros		
 
-//			if (respuestaAlmacenada.contains("\\//")) {
-//				// TODO TRATAMIENTO SACAR PATRON
-//
-//				return "error backslash doble;25490";
-//			} else if (respuesta.equals("undefined")) {
-//				// TODO TRATAMIENTO SACAR PATRON
-//				return "error respuesta vacia;";
-//			} else if (respuestaAlmacenada.contains("\\/")) {
-//				System.err.println(respuestaAlmacenada);
-//				System.err.println(respuesta);
-//
-//				return "error backslash simple;25490";
-//			}
-
-//			if (respuesta.length() > 356 && respuestaAlmacenada.length() > 356) {
-//				if (respuesta.substring(0, 357).equals(respuestaAlmacenada.substring(0, 357))) {
-//					return "Error en orden salida occurs;";
-//				}
-//			}
+			if (respuesta.length() > 356 && respuestaAlmacenada.length() > 356) {
+				if (respuesta.substring(0, 357).equals(respuestaAlmacenada.substring(0, 357))) {
+					if (respuesta.startsWith("{\"POSAZ536OperationResponse")) {
+						System.out.println();
+					}
+					return "Error en orden salida occurs;";
+				}
+			}
 
 			// }
 			if (respuesta.startsWith("{\"POSAZ620OperationResponse")) {
